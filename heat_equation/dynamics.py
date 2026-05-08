@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from utils.diagnostics import diagnostics
 from kernels.gauss import gauss, nabla, laplace
 from config import no_particles, heat_alpha
-from manufactured_solutions.solution_2 import source_term_heat_equation
+from manufactured_solutions.solution_3 import source_term_heat_equation
 
 
 def dynamics(t, y, is_border_particle, use_manufactured_solution):
@@ -27,7 +27,7 @@ def dynamics(t, y, is_border_particle, use_manufactured_solution):
             r_dot[a] = np.zeros(2)
             T_dot[a] = heat_alpha * laplace(r[a], T[a], r, T)
             if use_manufactured_solution:
-                T_dot[a] -= heat_alpha * source_term_heat_equation(t, r[a][0], r[a][1])
+                T_dot[a] += source_term_heat_equation(t, r[a][0], r[a][1])
         else:
             r_dot[a] = np.zeros(2)
             T_dot[a] = np.zeros(1)

@@ -26,7 +26,7 @@ def ruku_4(
 
     # iterate up to the last entry of times, not including it, and also start
     # walking index at 1
-    for index, time in enumerate(times[: -1], start=1):
+    for index, time in enumerate(times[:-1], start=1):
         k[:, 1] = function(time, y)
         k[:, 2] = function(time + half_dt, y + half_dt * k[:, 1])
         k[:, 3] = function(time + half_dt, y + half_dt * k[:, 2])

@@ -1,6 +1,6 @@
 # code for the solution function
-#
-# T(t, x, y) = cos(a · √(x² + y²) )
+#                -(x² + y²)
+# T(t, x, y) = e
 
 import numpy as np
 from itertools import product
@@ -17,7 +17,7 @@ from config import (
     heat_alpha,
 )
 
-scaling = 3
+scaling = 1
 
 
 def main():
@@ -48,11 +48,9 @@ def main():
 
 
 def solution(x: float, y: float, t: float = 0):
-    return np.cos(scaling * np.sqrt(x**2 + y**2))
+    return np.exp(-scaling * (x**2 + y**2))
 
 
 def source_term_heat_equation(t: float, x: float, y: float):
-    norm = np.linalg.norm([x, y])
-    return heat_alpha * (
-        scaling / norm * np.sin(scaling * norm) + scaling**2 * np.cos(scaling * norm)
-    )
+    euclidean = x**2 + y**2
+    return heat_alpha * 4 * (scaling**2) * euclidean * np.exp(-scaling * euclidean)

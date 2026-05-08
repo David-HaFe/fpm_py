@@ -22,7 +22,8 @@ and one of the following **mandatory** flags:
 | :construction: | `--visualize_kernel` | plots the kernel function specified in `config.py` |
 | :white_check_mark: | `--heat_equation` | simulating heat transfer using a PDE |
 | :white_check_mark: | `--heat_equation_analytical` | evaluating a known analytical solution of the heat equation at all simulation time steps |
-| :warning: | `--navier_stokes_compressible` | simulating compressible fluid flow (does weird things and is also deprecated) |
+| :white_check_mark: | `--heat_equation_manufactured` | plot manufactured solution, and also add source term to dynamics |
+| :x: | `--navier_stokes_compressible` | simulating compressible fluid flow (does weird things and is also deprecated) |
 | :construction: | `--navier_stokes_incompressible` | simulating incompressible fluid flow (not working) |
 
 Additionally, you can also add

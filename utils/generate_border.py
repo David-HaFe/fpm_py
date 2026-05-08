@@ -10,7 +10,7 @@ from config import (
     dy,
 )
 
-from manufactured_solutions.solution_2 import solution as set_border
+from manufactured_solutions.solution_3 import solution as set_border
 
 from utils.diagnostics import diagnostics
 
