@@ -7,7 +7,7 @@ from utils.diagnostics import diagnostics
 
 ### grid ######################################################################
 # number of particles in the x and y dimension
-no_particles_x = 10
+no_particles_x = 7
 no_particles_y = no_particles_x
 
 # interval where the x and y dimension are contained
@@ -99,7 +99,7 @@ no_particles = (no_particles_x + 2 * border_thickness) * (
 t0 = 0.0
 
 # end time
-t1 = 20.0
+t1 = 5.0
 
 # number of steps
 steps_per_sec = 15

@@ -11,6 +11,8 @@ import heat_equation.dynamics as heat_equation
 import heat_equation_analytical.dynamics as heat_equation_analytical
 import manufactured_solutions.solution_3 as manufactured_solution
 
+from solvers.euler_forward import euler_forward
+from solvers.euler_backward import euler_backward
 from solvers.ruku_4 import ruku_4
 from utils.diagnostics import diagnostics
 from kernels.gauss import gauss
@@ -81,7 +83,7 @@ def main(use_manufactured_solution: bool):
     # with tqdm(total=t_span[1], unit="t") as pbar:
     diagnostics.time_ode()
 
-    sol = ruku_4(
+    sol = euler_backward(
         function=lambda t, y: heat_equation.dynamics(
             t,
             y,

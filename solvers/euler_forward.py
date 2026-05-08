@@ -9,7 +9,7 @@ def euler_forward(
     t_end=1,
     dt=0.01,
 ):
-    no_iterations = int(t_end / dt)
+    no_iterations = int((t_end - t_start)/ dt)
     solution = np.empty((np.size(initial_condition), no_iterations + 1))
     y = initial_condition
     t = t_start
