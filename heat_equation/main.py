@@ -43,9 +43,10 @@ def main(use_manufactured_solution: bool):
     for _, y in enumerate(y_positions):
         for _, x in enumerate(x_positions):
             r_0.extend([x, y])
+
             # T_0.extend([0.1 * cos(8 * pi * x) + noise(0.05)])
             # T_0.extend([noise(0.1)])
-            # T_0.extend([0.3 * sin(14 * x) + 0.3 * cos(14 * y) + noise(0.03)])
+            T_0.extend([0.3 * sin(14 * x) + 0.3 * cos(14 * y) + noise(0.03)])
             # T_0.extend(
             #     [
             #         4 * heat_equation_analytical.dynamics(t0, 0.5 * x + 2, 0.5 * y + 2)
@@ -53,7 +54,8 @@ def main(use_manufactured_solution: bool):
             #     ]
             # )
             # T_0.extend([5 * gauss(np.zeros(2), np.array([x, y]), 1.5 * border)])
-            T_0.extend([manufactured_solution.solution(x, y, 0)])
+            # T_0.extend([manufactured_solution.solution(x, y, 0)])
+
             is_border_particle.extend([False])
 
     base_temp = [0]

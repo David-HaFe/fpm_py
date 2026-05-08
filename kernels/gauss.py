@@ -7,6 +7,7 @@ from config import (
     no_particles,
     use_neumann,
     set_neumann,
+    border,
 )
 
 alpha = 6.25  # don't change this, otherwise kernel looks not very good
@@ -57,13 +58,17 @@ def _solve_least_squares_gauss(
             b[count] = function_i - function_j
             count += 1
 
-    # append neumannn boundary condition
-    if use_neumann:
-        normal_vector = set_border_gradient(r_i[0], r_i[1])
-        D[count] = [normal_vector[0], normal_vector[1], 0, 0, 0]
-        W[count] = 1
-        b[count] = 0
-        count += 1
+    # append neumannn boundary condition, since we found a border point
+    if use_neumann and (max(abs(r_i[0]), abs(r_i[1])) >= border):
+
+        # this may be two dimensional in case of an edge point
+        normal_vector = set_neumann(r_i[0], r_i[1])
+        no_boundary_conditions = normal_vector.shape[0]
+        for i in range(no_boundary_conditions):
+            D[count] = [normal_vector[i][0], normal_vector[i][1], 0, 0, 0]
+            W[count] = 1
+            b[count] = 0
+            count += 1
 
     D = D[:count]
     W = W[:count]

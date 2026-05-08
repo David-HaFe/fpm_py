@@ -22,8 +22,8 @@ no_particles_y = no_particles_x
 border = 2
 
 # choose which boundary condition type to choose
-use_neumann = False
-use_dirichlet = True
+use_dirichlet = False
+use_neumann = True
 
 # assert use_neumann != use_dirichlet
 
@@ -41,17 +41,20 @@ else:
 def set_neumann(x, y):
     # at x border
     if abs(x) > abs(y):
-        normal_vector = np.array([np.sign(x), 0])
+        result = np.array([[np.sign(x), 0]])
 
     # at y border
     elif abs(x) < abs(y):
-        normal_vector = np.array([0, np.sign(y)])
+        result = np.array([[0, np.sign(y)]])
 
     # at edge
     else:
-        normal_vector = np.array([np.sign(x), np.sign(y)])
+        result = np.array([
+            [np.sign(x), 0],
+            [0, np.sign(y)],
+        ])
 
-    return normal_vector
+    return result
 
 
 # can be used to throw an arbitrary border condition onto the border
@@ -145,8 +148,10 @@ gravity = np.array([0, -0.81])
 # .npz shall not be written out
 compared_files = np.array(
     [
-        "heat_equation/solutions/solution_10x10_r1_5",
-        "heat_equation_manufactured/solutions/solution_10x10_r1_5",
+        # "heat_equation/solutions/solution_10x10_r1_5",
+        # "heat_equation_manufactured/solutions/solution_10x10_r1_5",
+        "heat_equation/solutions/solution_20x20_r1_5",
+        "heat_equation_manufactured/solutions/solution_20x20_r1_5",
         # "heat_equation_analytical/solutions/solution_3x3_r1_5",
         # "heat_equation_analytical/solutions/solution_5x5_r1_5",
         # "heat_equation_analytical/solutions/solution_10x10_r1_5",

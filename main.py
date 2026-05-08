@@ -76,7 +76,7 @@ if args.heat_equation_manufactured:
     sim_result = manufactured_solution.main()
 
     file_prefix = "heat_equation_manufactured"
-    if not args.no_plot:
+    # if not args.no_plot:
         # plot_temperature_map(sim_result, file_prefix)
         # plot_temperature_surface(sim_result, file_prefix)
 
