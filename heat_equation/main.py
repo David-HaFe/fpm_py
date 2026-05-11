@@ -48,7 +48,9 @@ def main(use_manufactured_solution: bool):
 
             # T_0.extend([0.1 * cos(8 * pi * x) + noise(0.05)])
             # T_0.extend([noise(0.1)])
-            T_0.extend([0.3 * sin(14 * x) + 0.3 * cos(14 * y) + noise(0.03)])
+            T_0.extend(
+                [0.3 * sin(14 * x) + 0.8 * cos(x) + 0.3 * cos(14 * y) + noise(0.03)]
+            )
             # T_0.extend(
             #     [
             #         4 * heat_equation_analytical.dynamics(t0, 0.5 * x + 2, 0.5 * y + 2)
@@ -83,7 +85,7 @@ def main(use_manufactured_solution: bool):
     # with tqdm(total=t_span[1], unit="t") as pbar:
     diagnostics.time_ode()
 
-    sol = euler_backward(
+    sol = ruku_4(
         function=lambda t, y: heat_equation.dynamics(
             t,
             y,

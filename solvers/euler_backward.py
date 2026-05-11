@@ -20,19 +20,19 @@ def euler_backward(
     y_plus = np.zeros(np.size(initial_condition))
 
     def residual(y_next, y_now):
-        return y_next - y_now - function(y_next)*dt
+        return y_next - y_now - function(y_next) * dt
 
     # iterate up to the last entry of times, not including it, and also start
     # walking index at 1
     # should technically evaulate at t_k+1, but doesn't matter here
     tol = 1e-4
-    for index, time in enumerate(times[: -1], start=1):
+    for index, time in enumerate(times[:-1], start=1):
 
-        error = 2*tol
+        error = 2 * tol
         y_plus = y
         while error > tol:
             y_plus = y + dt * function(time, y_plus)
-            error = np.linalg.norm(y_plus - y - dt*function(time, y_plus))
+            error = np.linalg.norm(y_plus - y - dt * function(time, y_plus))
 
         y = y_plus
         solution[:, index] = y

@@ -7,7 +7,7 @@ from utils.diagnostics import diagnostics
 
 ### grid ######################################################################
 # number of particles in the x and y dimension
-no_particles_x = 7
+no_particles_x = 15
 no_particles_y = no_particles_x
 
 # interval where the x and y dimension are contained
@@ -33,12 +33,15 @@ if use_dirichlet:
     border_thickness = 1
 else:
     # DO NOT TOUCH
-    # border has to be 0 for neumann boundary condition
+    # border has to be 0 if dirichlet is not used
     border_thickness = 0
 
 
 # neumann boundary definition
 def set_neumann(x, y):
+
+    assert (abs(x) == border) or (abs(y) == border)
+
     # at x border
     if abs(x) > abs(y):
         result = np.array([[np.sign(x), 0]])
@@ -49,10 +52,12 @@ def set_neumann(x, y):
 
     # at edge
     else:
-        result = np.array([
-            [np.sign(x), 0],
-            [0, np.sign(y)],
-        ])
+        result = np.array(
+            [
+                [np.sign(x), 0],
+                [0, np.sign(y)],
+            ]
+        )
 
     return result
 

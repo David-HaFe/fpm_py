@@ -59,7 +59,7 @@ def _solve_least_squares_gauss(
             count += 1
 
     # append neumannn boundary condition, since we found a border point
-    if use_neumann and (max(abs(r_i[0]), abs(r_i[1])) >= border):
+    if use_neumann and (abs(r_i[0]) == border) or (abs(r_i[1]) == border):
 
         # this may be two dimensional in case of an edge point
         normal_vector = set_neumann(r_i[0], r_i[1])
@@ -79,6 +79,13 @@ def _solve_least_squares_gauss(
 
     # coefficients = np.linalg.lstsq(-W[:, None] * D, b)[0]
     # coefficients = np.linalg.lstsq(-W @ D, b)[0]
+
+    # check if gradient is too steep
+    if use_neumann:
+        if abs(r_i[0]) == border:
+            assert abs(coefficients[0]) < 1e-7
+        if abs(r_i[1]) == border:
+            assert abs(coefficients[1]) < 1e-7
 
     # diagnostics.time_least_squares()
     return coefficients
