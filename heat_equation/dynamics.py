@@ -8,7 +8,11 @@ from concurrent.futures import ThreadPoolExecutor
 from utils.diagnostics import diagnostics
 from kernels.gauss import gauss, nabla, laplace
 from config import no_particles, heat_alpha, manufactured_solution_no
-source_term_heat_equation = importlib.import_module(manufactured_solution_no).source_term_heat_equation
+
+source_term_heat_equation = importlib.import_module(
+    manufactured_solution_no
+).source_term_heat_equation
+
 
 def dynamics(t, y, is_border_particle, use_manufactured_solution):
     diagnostics.time_dynamics()

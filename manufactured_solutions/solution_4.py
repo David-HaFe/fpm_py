@@ -5,7 +5,6 @@
 import numpy as np
 from itertools import product
 
-from config import heat_alpha
 from config import (
     sim_result,
     t0,

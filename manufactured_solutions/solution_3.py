@@ -55,5 +55,5 @@ def source_term_heat_equation(t: float, x: float, y: float):
     euclidean = x**2 + y**2
     exponential = np.exp(-scaling * euclidean)
     factor = 4 * scaling * (scaling * euclidean - 1)
-    return - heat_alpha * factor * exponential
+    return -heat_alpha * factor * exponential
     # return heat_alpha * 4 * (scaling**2) * euclidean * np.exp(-scaling * euclidean)

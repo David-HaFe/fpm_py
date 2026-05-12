@@ -28,8 +28,9 @@ from config import (
     border,
     manufactured_solution_no,
 )
+
 manufactured_solution = importlib.import_module(manufactured_solution_no)
-from utils.generate_border import generate_border
+from utils.generate_border import generate_border, update_border
 
 seed(37)
 
@@ -38,7 +39,10 @@ def noise(magnitude):
     return uniform(-magnitude, magnitude)
 
 
-def main(use_manufactured_solution: bool):
+def main(
+    use_analytical_solution: bool,
+    use_manufactured_solution: bool,
+):
     r_0 = []
     T_0 = []
     is_border_particle = []
@@ -48,18 +52,21 @@ def main(use_manufactured_solution: bool):
         for _, x in enumerate(x_positions):
             r_0.extend([x, y])
 
-            # T_0.extend([0.1 * cos(8 * pi * x) + noise(0.05)])
-            # T_0.extend([noise(0.1)])
-            # T_0.extend(
-            #     [0.3 * sin(14 * x) + 0.8 * cos(x) + 0.3 * cos(14 * y) + noise(0.03)]
-            # )
-            # T_0.extend([
-            #     4 * heat_equation_analytical.dynamics(t0, 0.5 * x + 2, 0.5 * y + 2)
-            #     + noise(0.01)
-            # ])
-            # T_0.extend([5 * gauss(np.zeros(2), np.array([x, y]), 1.5 * border)])
-            # T_0.extend([heat_equation_analytical.dynamics(t0, x, y)])
-            T_0.extend([manufactured_solution.solution(x, y, 0)])
+            if use_analytical_solution:
+                T_0.extend([heat_equation_analytical.dynamics(t0, x, y)])
+            elif use_manufactured_solution:
+                T_0.extend([manufactured_solution.solution(x, y, 0)])
+            else:
+                # T_0.extend([0.1 * cos(8 * pi * x) + noise(0.05)])
+                # T_0.extend([noise(0.1)])
+                T_0.extend(
+                    [0.3 * sin(14 * x) + 0.8 * cos(x) + 0.3 * cos(14 * y) + noise(0.03)]
+                )
+                # T_0.extend([
+                #     4 * heat_equation_analytical.dynamics(t0, 0.5 * x + 2, 0.5 * y + 2)
+                #     + noise(0.01)
+                # ])
+                # T_0.extend([5 * gauss(np.zeros(2), np.array([x, y]), 1.5 * border)])
 
             is_border_particle.extend([False])
 
@@ -93,8 +100,12 @@ def main(use_manufactured_solution: bool):
             is_border_particle,
             use_manufactured_solution,
         ),
-        border_update_function=manufactured_solution.solution,
-        is_border_particle=is_border_particle,
+        border_update=lambda t, y: update_border(
+            t,
+            y,
+            manufactured_solution.solution,
+            is_border_particle,
+        ),
         initial_condition=y_0,
         t_start=t0,
         t_end=t1,

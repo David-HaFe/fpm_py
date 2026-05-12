@@ -5,11 +5,11 @@ from dataclasses import dataclass
 from math import pi, sin
 from utils.diagnostics import diagnostics
 
-manufactured_solution_no = "manufactured_solutions.solution_5"
+manufactured_solution_no = "manufactured_solutions.solution_3"
 
 ### grid ######################################################################
 # number of particles in the x and y dimension
-no_particles_x = 7
+no_particles_x = 11
 no_particles_y = no_particles_x
 
 # interval where the x and y dimension are contained
@@ -109,10 +109,10 @@ no_particles = (no_particles_x + 2 * border_thickness) * (
 t0 = 0.0
 
 # end time
-t1 = 25.0
+t1 = 15.0
 
 # number of steps
-steps_per_sec = 15
+steps_per_sec = 20
 
 # playback speed of the animation
 playback_speed = 3
@@ -128,7 +128,7 @@ dt = (t1 - t0) / no_steps
 
 ### kernel ####################################################################
 # factor by which kernel support should exceed initial grid distance
-kernel_scaling = 1.5
+kernel_scaling = 2.0
 
 # DO NOT TOUCH
 # actual kernel support length based on kernel scaling
@@ -158,50 +158,38 @@ gravity = np.array([0, -0.81])
 # .npz shall not be written out
 compared_files = np.array(
     [
-        "heat_equation/solutions/solution_7x7_r1_5",
-        # "heat_equation_analytical/solutions/solution_7x7_r1_5",
-        "heat_equation_manufactured/solutions/solution_7x7_r1_5",
-        # "heat_equation/solutions/solution_20x20_r1_5",
-        # "heat_equation_manufactured/solutions/solution_20x20_r1_5",
-        # "heat_equation_analytical/solutions/solution_3x3_r1_5",
-        # "heat_equation_analytical/solutions/solution_5x5_r1_5",
-        # "heat_equation_analytical/solutions/solution_10x10_r1_5",
-        # "heat_equation_analytical/solutions/solution_15x15_r1_5",
-        # "heat_equation_analytical/solutions/solution_20x20_r1_5",
-        # # "heat_equation/solutions/solution_3x3_r1_5",
-        # "heat_equation/solutions/solution_5x5_r1_5",
-        # "heat_equation/solutions/solution_10x10_r1_5",
-        # "heat_equation/solutions/solution_15x15_r1_5",
-        # "heat_equation/solutions/solution_20x20_r1_5",
-        # "heat_equation/solutions/solution_40x40_r1_5",
-        # "heat_equation/solutions/solution_2x2_r1_5",
-        # "heat_equation_analytical/solutions/solution_2x2_r1_5",
-        # "heat_equation/solutions/solution_4x4_r1_5",
-        # "heat_equation_analytical/solutions/solution_4x4_r1_5",
-        # "heat_equation/solutions/solution_8x8_r1_5",
-        # "heat_equation_analytical/solutions/solution_8x8_r1_5",
-        # "heat_equation/solutions/solution_16x16_r1_5",
-        # "heat_equation_analytical/solutions/solution_16x16_r1_5",
-        # "heat_equation/solutions/solution_32x32_r1_5",
-        # "heat_equation_analytical/solutions/solution_32x32_r1_5",
-        # "heat_equation/solutions/solution_3x3_r1_5",
-        # "heat_equation_analytical/solutions/solution_3x3_r1_5",
-        # "heat_equation/solutions/solution_5x5_r1_5",
-        # "heat_equation_analytical/solutions/solution_5x5_r1_5",
-        # "heat_equation/solutions/solution_9x9_r1_5",
-        # "heat_equation_analytical/solutions/solution_9x9_r1_5",
-        # "heat_equation/solutions/solution_17x17_r1_5",
-        # "heat_equation_analytical/solutions/solution_17x17_r1_5",
+        "heat_equation/solutions/solution_11x11_r1_5_dt0_1",
+        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_1",
+        "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
+        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
+        "heat_equation/solutions/solution_11x11_r1_5_dt0_025",
+        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_025",
+        "heat_equation/solutions/solution_11x11_r1_5_dt0_0125",
+        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_0125",
+        # "heat_equation/solutions/solution_6x6_r1_5_dt0_05",
+        # "heat_equation_manufactured/solutions/solution_6x6_r1_5_dt0_05",
+        # "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
+        # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
+        # "heat_equation/solutions/solution_21x21_r2_0_dt0_05",
+        # "heat_equation_manufactured/solutions/solution_21x21_r2_0_dt0_05",
+        # "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
+        # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
+        # "heat_equation/solutions/solution_11x11_r2_0_dt0_05",
+        # "heat_equation_manufactured/solutions/solution_11x11_r2_0_dt0_05",
+        # "heat_equation/solutions/solution_11x11_r3_0_dt0_05",
+        # "heat_equation_manufactured/solutions/solution_11x11_r3_0_dt0_05",
+        # "heat_equation/solutions/solution_11x11_r4_5_dt0_05",
+        # "heat_equation_manufactured/solutions/solution_11x11_r4_5_dt0_05",
     ]
 )
 
-# points at which the solution should be compared (in steps)
+# points at which the solution should be compared (in seconds)
 snapshots = np.array(
     [
-        10,
-        40,
-        74,
-        299,
+        1,
+        3,
+        8,
+        14,
     ]
 )
 
@@ -224,6 +212,15 @@ def recompute():
 
     # actual kernel support length based on kernel scaling
     kernel_length = kernel_scaling * (dx + dy) / 2
+
+
+@dataclass
+class sim_run_parameters:
+    is_analytical: bool
+    is_manufactured: bool
+    no_particles: int
+    kernel_radius: float
+    step_size: float
 
 
 ### sim result data class #####################################################

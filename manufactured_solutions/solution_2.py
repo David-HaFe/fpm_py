@@ -54,5 +54,6 @@ def solution(x: float, y: float, t: float = 0):
 def source_term_heat_equation(t: float, x: float, y: float):
     norm = np.linalg.norm([x, y])
     return heat_alpha * (
-        scaling / (norm + 1e-2) * np.sin(scaling * norm) + scaling**2 * np.cos(scaling * norm)
+        scaling / (norm + 1e-2) * np.sin(scaling * norm)
+        + scaling**2 * np.cos(scaling * norm)
     )

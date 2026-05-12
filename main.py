@@ -35,6 +35,7 @@ from config import (
     recompute,
     manufactured_solution_no,
 )
+
 manufactured_solution = importlib.import_module(manufactured_solution_no)
 
 parser = argparse.ArgumentParser()
@@ -53,7 +54,10 @@ parser.add_argument("--visualize_kernel", action="store_true")
 args = parser.parse_args()
 
 if args.heat_equation:
-    sim_result = heat_equation.main(args.heat_equation_manufactured)
+    sim_result = heat_equation.main(
+        use_analytical_solution=args.heat_equation_analytical,
+        use_manufactured_solution=args.heat_equation_manufactured,
+    )
 
     file_prefix = "heat_equation"
     if not args.no_plot:

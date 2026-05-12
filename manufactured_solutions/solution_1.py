@@ -5,7 +5,6 @@
 import numpy as np
 from itertools import product
 
-from config import heat_alpha
 from config import (
     sim_result,
     t0,
@@ -28,7 +27,7 @@ def main():
         for particle_index, (x, y) in enumerate(product(x_positions, y_positions)):
             x_sol[t_index][particle_index] = float(x)
             y_sol[t_index][particle_index] = float(y)
-            T_sol[t_index][particle_index] = float(solution(t, x, y))
+            T_sol[t_index][particle_index] = float(solution(x, y, t))
 
     data_2_dummy = np.zeros((no_steps, no_particles))
     is_border_particle = np.full(no_particles, False)
@@ -44,14 +43,9 @@ def main():
     return result
 
 
-def solution(t: float, x: float, y: float):
+def solution(x: float, y: float, t: float = 0):
     return (x**2 + y**2) * np.cos(t)
 
 
-def source_term_heat_equation(t: float, y: float):
-    r = y[: 2 * no_particles]
-    r = r.reshape(-1, 2)
-    x = r[:, 0]
-    y = r[:, 1]
-
+def source_term_heat_equation(t: float, x: float, y: float):
     return -(x**2 + y**2) * np.sin(t) - 4 * heat_alpha * np.cos(t)

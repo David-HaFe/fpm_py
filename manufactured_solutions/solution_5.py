@@ -4,7 +4,6 @@
 import numpy as np
 from itertools import product
 
-from config import heat_alpha
 from config import (
     sim_result,
     t0,
@@ -15,9 +14,6 @@ from config import (
     y_positions,
     heat_alpha,
 )
-
-a = 1
-b = 2
 
 
 def main():
@@ -52,4 +48,6 @@ def solution(x: float, y: float, t: float = 0):
 
 
 def source_term_heat_equation(t: float, x: float, y: float):
-    return -np.sin(x * y * t) + 2 * heat_alpha * np.cos(x * y * t)
+    return -x * y * np.sin(x * y * t) + heat_alpha * t**2 * (
+        x**2 + y**2
+    ) * np.cos(x * y * t)

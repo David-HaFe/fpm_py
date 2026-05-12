@@ -68,18 +68,17 @@ def generate_border(
 
     return r_0, attribute, p_0, is_border_particle
 
+
 # call this to update border
-def update_border(t, y, border_update_function, is_border_particle):
+def update_border(t, y, border_values, is_border_particle):
     r = y[: 2 * no_particles]
     T = y[2 * no_particles :]
     r = r.reshape(-1, 2)
 
     for a, r_a in enumerate(r):
         if is_border_particle[a]:
-            T[a] = border_update_function(r_a[0], r_a[1], t)
+            T[a] = border_values(r_a[0], r_a[1], t)
 
     r = r.reshape(-1, order="C")
     y = np.concatenate((r, T))
     return y
-
-

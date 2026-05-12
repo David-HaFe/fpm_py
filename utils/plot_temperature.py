@@ -43,8 +43,8 @@ def plot_temperature_surface(sim_result, file_prefix):
     def update(frame):
         ax.cla()
         ax.set_zlim(2 * z_min, 2 * z_max)
-        ax.set_xlim(-border-.3, border+.3)
-        ax.set_ylim(-border-.3, border+.3)
+        ax.set_xlim(-border - 0.3, border + 0.3)
+        ax.set_ylim(-border - 0.3, border + 0.3)
         ax.set_title(f"t = {sim_result.t[frame]:.2f}")
         ZI = griddata(
             (sim_result.x[frame, interior], sim_result.y[frame, interior]),

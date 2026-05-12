@@ -10,6 +10,7 @@ import re
 from utils.read_from_npz import get_values_from_npz
 from utils.diagnostics import diagnostics
 from config import (
+    sim_run_parameters,
     compared_files,
     border,
     snapshots,
@@ -23,39 +24,49 @@ def compare_MSE():
     # derive names for table from file names
     file_names = []
     for file in compared_files:
-        ana_or_num = re.search(r"analytical", file) is not None
-        prefix = ana_or_num and "ana" or "num"
+        is_ana = re.search(r"analytical", file) is not None
+        is_man = re.search(r"manufactured", file) is not None
+        prefix = is_ana and "ana" or is_man and "man" or "num"
         numbers = re.findall(r"-?\d*\.?\d+", file)
-        dimensions = f"{numbers[0]}_{numbers[1]}"
-        file_names.extend([f"{prefix}_{dimensions}"])
+        dimensions = f"{numbers[0]}x{numbers[1]}"
+        radius = f"{numbers[2]}.{numbers[3]}"
+        steps = f"{numbers[4]}.{numbers[5]}"
+
+        file_names.extend([f"{prefix} {dimensions} r{radius} dt{steps}"])
 
     width = max(len(file) for file in file_names)
 
     grid_points = np.linspace(-border, border, 21)
 
-    for frame in snapshots:
+    for second in snapshots:
         print()
-        print(f"run for step {frame} ---------------------------")
+        print(f"run for step {second} ---------------------------")
         print(" " * (width + 3), end="")
         print(" | ".join(f"{file_name:<{width}}" for file_name in file_names))
 
         plot_errors = []
         plot_no_particles = []
+        plot_kernel_radius = []
+        plot_step_size = []
         mse = []
 
         for index_1, file_1 in enumerate(compared_files):
             result_1 = get_values_from_npz(file_1)
+            params_1 = _get_information_from_name(file_1)
+            frame_1 = int(second / params_1.step_size)
             points_1 = griddata(
-                points=(result_1.x[frame, :], result_1.y[frame, :]),
-                values=result_1.data_1[frame, :],
+                points=(result_1.x[frame_1, :], result_1.y[frame_1, :]),
+                values=result_1.data_1[frame_1, :],
                 xi=(grid_points, grid_points),
                 method="cubic",
             )
             for index_2, file_2 in enumerate(compared_files):
                 result_2 = get_values_from_npz(file_2)
+                params_2 = _get_information_from_name(file_2)
+                frame_2 = int(second / params_2.step_size)
                 points_2 = griddata(
-                    points=(result_2.x[frame, :], result_2.y[frame, :]),
-                    values=result_2.data_1[frame, :],
+                    points=(result_2.x[frame_2, :], result_2.y[frame_2, :]),
+                    values=result_2.data_1[frame_2, :],
                     xi=(grid_points, grid_points),
                     method="cubic",
                 )
@@ -64,21 +75,20 @@ def compare_MSE():
                 errors[index_1][index_2] = mse
 
                 # save errors for convergence plot
-                file_1_is_analytical = re.search(r"analytical", file_1) is not None
-                numbers = re.findall(r"-?\d*\.?\d+", file_1)
-                numbers = [int(number) for number in numbers]
-                file_1_no_particles = numbers[0]
+                analytical_match = params_1.is_analytical and not params_2.is_analytical
+                manufactured_match = (
+                    params_1.is_manufactured and not params_2.is_manufactured
+                )
+                same_no_of_particles = params_1.no_particles == params_2.no_particles
+                same_step_size = params_1.step_size == params_2.step_size
+                same_radius = params_1.kernel_radius == params_2.kernel_radius
+                same_params = same_no_of_particles and same_step_size and same_radius
 
-                file_2_is_analytical = re.search(r"analytical", file_2) is not None
-                numbers = re.findall(r"-?\d*\.?\d+", file_2)
-                numbers = [int(number) for number in numbers]
-                file_2_no_particles = numbers[0]
-
-                one_of_each = file_1_is_analytical and not file_2_is_analytical
-                same_no_of_particles = file_1_no_particles == file_2_no_particles
-                if one_of_each and same_no_of_particles:
+                if (analytical_match or manufactured_match) and same_params:
                     plot_errors.extend([mse])
-                    plot_no_particles.extend([file_1_no_particles])
+                    plot_no_particles.extend([params_1.no_particles])
+                    plot_kernel_radius.extend([params_1.kernel_radius])
+                    plot_step_size.extend([params_1.step_size])
 
             # print one line of the error table
             print()
@@ -86,14 +96,26 @@ def compare_MSE():
             print(" | ".join(f"{error:<{width}.5f}" for error in errors[index_1]))
 
         # convergence plot
-        plt.clf()
-        plt.plot(np.log2(plot_no_particles), np.log2(plot_errors), "-x")
+        compared_parameter = "step"
 
-        plt.xlabel("log2 number of particles")
-        plt.ylabel("log2 error")
-        plt.title(f"errors at step {frame}")
-        plt.savefig(f"comparisons/error_graph_{frame}.png")
-        # plt.legend()
+        plt.clf()
+        plt.grid()
+        plt.ylabel("error")
+        plt.title(f"errors at {second} s")
+
+        match compared_parameter:
+            case "step":
+                plt.xlabel("step size")
+                plt.loglog(plot_step_size, plot_errors, "-x")
+                plt.savefig(f"comparisons/error_step_{second}.png")
+            case "grid":
+                plt.xlabel("grid dimension")
+                plt.loglog(plot_no_particles, plot_errors, "-x")
+                plt.savefig(f"comparisons/error_grid_{second}.png")
+            case "radius":
+                plt.xlabel("relative kernel radius")
+                plt.loglog(plot_kernel_radius, plot_errors, "-x")
+                plt.savefig(f"comparisons/error_radius_{second}.png")
 
 
 def compare_scatter():
@@ -150,7 +172,7 @@ def compare_scatter():
                         s=2,
                     )
                     ax.legend()
-                    sys.stdout.write(f"\r\033[Kplotting surface @ {result_1.t[frame]}")
+                    sys.stdout.write(f"\r\033[Kplotting scatter @ {result_1.t[frame]}")
                     sys.stdout.flush()
 
                 ani = animation.FuncAnimation(
@@ -160,3 +182,28 @@ def compare_scatter():
                 ani.save(name, writer="ffmpeg", fps=30)
 
     diagnostics.time_scatter()
+
+
+# can be called to get all the information one needs about the file
+def _get_information_from_name(filename):
+    is_analytical = re.search(r"analytical", filename) is not None
+    is_manufactured = re.search(r"manufactured", filename) is not None
+
+    numbers = re.findall(r"-?\d*\.?\d+", filename)
+    numbers = [int(number) for number in numbers]
+    no_particles = numbers[0]
+
+    kernel_radius = re.search(r"_r(\d+)_(\d+)", filename)
+    kernel_radius = float(f"{kernel_radius.group(1)}.{kernel_radius.group(2)}")
+
+    step_size = re.search(r"_dt(\d+)_(\d+)", filename)
+    step_size = float(f"{step_size.group(1)}.{step_size.group(2)}")
+
+    result = sim_run_parameters(
+        is_analytical=is_analytical,
+        is_manufactured=is_manufactured,
+        no_particles=no_particles,
+        kernel_radius=kernel_radius,
+        step_size=step_size,
+    )
+    return result
