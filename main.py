@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+import importlib
 
 try:
     play_ding = True
@@ -16,7 +17,6 @@ import heat_equation.main as heat_equation
 import heat_equation_analytical.main as heat_equation_analytical
 import navier_stokes_incompressible.main as navier_stokes_incompressible
 import navier_stokes_compressible.main as navier_stokes_compressible
-import manufactured_solutions.solution_3 as manufactured_solution
 
 from utils.visualize_kernel import visualize_kernel
 from utils.compare import compare_MSE, compare_scatter
@@ -33,7 +33,9 @@ from config import (
     no_particles,
     no_steps,
     recompute,
+    manufactured_solution_no,
 )
+manufactured_solution = importlib.import_module(manufactured_solution_no)
 
 parser = argparse.ArgumentParser()
 
@@ -76,9 +78,9 @@ if args.heat_equation_manufactured:
     sim_result = manufactured_solution.main()
 
     file_prefix = "heat_equation_manufactured"
-    # if not args.no_plot:
-    # plot_temperature_map(sim_result, file_prefix)
-    # plot_temperature_surface(sim_result, file_prefix)
+    if not args.no_plot:
+        # plot_temperature_map(sim_result, file_prefix)
+        plot_temperature_surface(sim_result, file_prefix)
 
     if not args.no_npz:
         export_to_npz(sim_result, file_prefix)

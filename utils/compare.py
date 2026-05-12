@@ -35,7 +35,7 @@ def compare_MSE():
 
     for frame in snapshots:
         print()
-        print(f"run for step {frame}")
+        print(f"run for step {frame} ---------------------------")
         print(" " * (width + 3), end="")
         print(" | ".join(f"{file_name:<{width}}" for file_name in file_names))
 
@@ -89,11 +89,11 @@ def compare_MSE():
         plt.clf()
         plt.plot(np.log2(plot_no_particles), np.log2(plot_errors), "-x")
 
-        plt.legend()
         plt.xlabel("log2 number of particles")
         plt.ylabel("log2 error")
         plt.title(f"errors at step {frame}")
         plt.savefig(f"comparisons/error_graph_{frame}.png")
+        # plt.legend()
 
 
 def compare_scatter():

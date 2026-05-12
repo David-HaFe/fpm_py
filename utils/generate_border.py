@@ -1,16 +1,20 @@
 import numpy as np
+import importlib
 
 from config import (
     no_particles_x,
     no_particles_y,
+    no_particles,
     border_thickness,
     border,
-    # set_border,
+    # set_dirichlet,
     dx,
     dy,
+    manufactured_solution_no,
 )
 
-from manufactured_solutions.solution_3 import solution as set_border
+# this is a bit hacky in order to accomodate the manufactured solution
+set_dirichlet = importlib.import_module(manufactured_solution_no).solution
 
 from utils.diagnostics import diagnostics
 
@@ -33,12 +37,12 @@ def generate_border(
     for _, x in enumerate(x_positions):
         for _, y in enumerate(y_positions):
             r_0.extend([x, -border - y])
-            attribute.extend([set_border(x, -border - y)])
+            attribute.extend([set_dirichlet(x, -border - y)])
             p_0.extend([1])
             is_border_particle.extend([True])
 
             r_0.extend([x, border + y])
-            attribute.extend([set_border(x, border + y)])
+            attribute.extend([set_dirichlet(x, border + y)])
             p_0.extend([1])
             is_border_particle.extend([True])
 
@@ -53,13 +57,29 @@ def generate_border(
     for _, y in enumerate(y_positions):
         for _, x in enumerate(x_positions):
             r_0.extend([-border - x, y])
-            attribute.extend([set_border(-border - x, y)])
+            attribute.extend([set_dirichlet(-border - x, y)])
             p_0.extend([1])
             is_border_particle.extend([True])
 
             r_0.extend([border + x, y])
-            attribute.extend([set_border(border + x, y)])
+            attribute.extend([set_dirichlet(border + x, y)])
             p_0.extend([1])
             is_border_particle.extend([True])
 
     return r_0, attribute, p_0, is_border_particle
+
+# call this to update border
+def update_border(t, y, border_update_function, is_border_particle):
+    r = y[: 2 * no_particles]
+    T = y[2 * no_particles :]
+    r = r.reshape(-1, 2)
+
+    for a, r_a in enumerate(r):
+        if is_border_particle[a]:
+            T[a] = border_update_function(r_a[0], r_a[1], t)
+
+    r = r.reshape(-1, order="C")
+    y = np.concatenate((r, T))
+    return y
+
+

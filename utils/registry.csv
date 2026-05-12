@@ -1,11 +1,192 @@
-registered at: ,2026-05-11 10:22:54.531149
+registered at: ,2026-05-11 16:14:19.133909
 logged at,name,log content
-0.4595,x_positions,"[-2.         -1.71428571 -1.42857143 -1.14285714 -0.85714286 -0.57142857
- -0.28571429  0.          0.28571429  0.57142857  0.85714286  1.14285714
-  1.42857143  1.71428571  2.        ]"
-0.4599,y_positions,[]
-0.4601,x_positions,[]
-0.4601,y_positions,"[-2.         -1.71428571 -1.42857143 -1.14285714 -0.85714286 -0.57142857
- -0.28571429  0.          0.28571429  0.57142857  0.85714286  1.14285714
-  1.42857143  1.71428571  2.        ]"
-115.2197,heat_equation/solutions/solution_15x15_r1_5.npz
+0.4674,x_positions,"[-2.66666667 -2.         -1.33333333 -0.66666667  0.          0.66666667
+  1.33333333  2.          2.66666667]"
+0.4678,y_positions,[0.66666667]
+0.468,x_positions,[0.66666667]
+0.4682,y_positions,"[-2.         -1.33333333 -0.66666667  0.          0.66666667  1.33333333
+  2.        ]"
+100.2699,heat_equation/solutions/solution_7x7_r1_5.npz
+142.6179,heat_equation_manufactured/solutions/solution_7x7_r1_5.npz
+142.6226,reading heat_equation/solutions/solution_7x7_r1_5...
+142.6227,t,"(375,)"
+142.6228,x,"(375, 81)"
+142.6229,y,"(375, 81)"
+142.623,data_1,"(375, 81)"
+142.623,data_2,"(375, 81)"
+142.6231,is_border_particle,"(81,)"
+142.6245,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+142.6246,t,"(375,)"
+142.6246,x,"(375, 81)"
+142.6247,y,"(375, 81)"
+142.6247,data_1,"(375, 81)"
+142.6248,data_2,"(375, 81)"
+142.6248,is_border_particle,"(81,)"
+183.4289,reading heat_equation/solutions/solution_7x7_r1_5...
+183.4291,t,"(375,)"
+183.4291,x,"(375, 81)"
+183.4292,y,"(375, 81)"
+183.4292,data_1,"(375, 81)"
+183.4293,data_2,"(375, 81)"
+183.4293,is_border_particle,"(81,)"
+183.4314,reading heat_equation/solutions/solution_7x7_r1_5...
+183.4315,t,"(375,)"
+183.4315,x,"(375, 81)"
+183.4316,y,"(375, 81)"
+183.4316,data_1,"(375, 81)"
+183.4317,data_2,"(375, 81)"
+183.4318,is_border_particle,"(81,)"
+183.4341,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.4341,t,"(375,)"
+183.4342,x,"(375, 81)"
+183.4343,y,"(375, 81)"
+183.4343,data_1,"(375, 81)"
+183.4344,data_2,"(375, 81)"
+183.4345,is_border_particle,"(81,)"
+183.4362,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.4364,t,"(375,)"
+183.4364,x,"(375, 81)"
+183.4365,y,"(375, 81)"
+183.4366,data_1,"(375, 81)"
+183.4367,data_2,"(375, 81)"
+183.4368,is_border_particle,"(81,)"
+183.4395,reading heat_equation/solutions/solution_7x7_r1_5...
+183.4396,t,"(375,)"
+183.4396,x,"(375, 81)"
+183.4397,y,"(375, 81)"
+183.4398,data_1,"(375, 81)"
+183.4398,data_2,"(375, 81)"
+183.4399,is_border_particle,"(81,)"
+183.442,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.4421,t,"(375,)"
+183.4421,x,"(375, 81)"
+183.4422,y,"(375, 81)"
+183.4422,data_1,"(375, 81)"
+183.4423,data_2,"(375, 81)"
+183.4423,is_border_particle,"(81,)"
+183.5129,reading heat_equation/solutions/solution_7x7_r1_5...
+183.513,t,"(375,)"
+183.5131,x,"(375, 81)"
+183.5132,y,"(375, 81)"
+183.5132,data_1,"(375, 81)"
+183.5133,data_2,"(375, 81)"
+183.5133,is_border_particle,"(81,)"
+183.5153,reading heat_equation/solutions/solution_7x7_r1_5...
+183.5154,t,"(375,)"
+183.5154,x,"(375, 81)"
+183.5155,y,"(375, 81)"
+183.5155,data_1,"(375, 81)"
+183.5156,data_2,"(375, 81)"
+183.5156,is_border_particle,"(81,)"
+183.52,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.5201,t,"(375,)"
+183.5201,x,"(375, 81)"
+183.5202,y,"(375, 81)"
+183.5203,data_1,"(375, 81)"
+183.5203,data_2,"(375, 81)"
+183.5204,is_border_particle,"(81,)"
+183.5223,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.5224,t,"(375,)"
+183.5224,x,"(375, 81)"
+183.5225,y,"(375, 81)"
+183.5225,data_1,"(375, 81)"
+183.5226,data_2,"(375, 81)"
+183.5226,is_border_particle,"(81,)"
+183.5243,reading heat_equation/solutions/solution_7x7_r1_5...
+183.5244,t,"(375,)"
+183.5245,x,"(375, 81)"
+183.5245,y,"(375, 81)"
+183.5246,data_1,"(375, 81)"
+183.5246,data_2,"(375, 81)"
+183.5247,is_border_particle,"(81,)"
+183.5269,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.527,t,"(375,)"
+183.5271,x,"(375, 81)"
+183.5272,y,"(375, 81)"
+183.5272,data_1,"(375, 81)"
+183.5273,data_2,"(375, 81)"
+183.5273,is_border_particle,"(81,)"
+183.6448,reading heat_equation/solutions/solution_7x7_r1_5...
+183.6449,t,"(375,)"
+183.6449,x,"(375, 81)"
+183.645,y,"(375, 81)"
+183.6451,data_1,"(375, 81)"
+183.6451,data_2,"(375, 81)"
+183.6452,is_border_particle,"(81,)"
+183.647,reading heat_equation/solutions/solution_7x7_r1_5...
+183.6471,t,"(375,)"
+183.6471,x,"(375, 81)"
+183.6472,y,"(375, 81)"
+183.6473,data_1,"(375, 81)"
+183.6473,data_2,"(375, 81)"
+183.6474,is_border_particle,"(81,)"
+183.6492,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.6493,t,"(375,)"
+183.6493,x,"(375, 81)"
+183.6494,y,"(375, 81)"
+183.6495,data_1,"(375, 81)"
+183.6495,data_2,"(375, 81)"
+183.6496,is_border_particle,"(81,)"
+183.6512,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.6513,t,"(375,)"
+183.6514,x,"(375, 81)"
+183.6514,y,"(375, 81)"
+183.6515,data_1,"(375, 81)"
+183.6515,data_2,"(375, 81)"
+183.6516,is_border_particle,"(81,)"
+183.6533,reading heat_equation/solutions/solution_7x7_r1_5...
+183.6534,t,"(375,)"
+183.6534,x,"(375, 81)"
+183.6535,y,"(375, 81)"
+183.6536,data_1,"(375, 81)"
+183.6537,data_2,"(375, 81)"
+183.6538,is_border_particle,"(81,)"
+183.6562,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.6563,t,"(375,)"
+183.6564,x,"(375, 81)"
+183.6564,y,"(375, 81)"
+183.6565,data_1,"(375, 81)"
+183.6565,data_2,"(375, 81)"
+183.6566,is_border_particle,"(81,)"
+183.7208,reading heat_equation/solutions/solution_7x7_r1_5...
+183.721,t,"(375,)"
+183.7211,x,"(375, 81)"
+183.7212,y,"(375, 81)"
+183.7213,data_1,"(375, 81)"
+183.7214,data_2,"(375, 81)"
+183.7214,is_border_particle,"(81,)"
+183.7242,reading heat_equation/solutions/solution_7x7_r1_5...
+183.7243,t,"(375,)"
+183.7243,x,"(375, 81)"
+183.7244,y,"(375, 81)"
+183.7244,data_1,"(375, 81)"
+183.7245,data_2,"(375, 81)"
+183.7245,is_border_particle,"(81,)"
+183.7267,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.7268,t,"(375,)"
+183.7268,x,"(375, 81)"
+183.7269,y,"(375, 81)"
+183.727,data_1,"(375, 81)"
+183.727,data_2,"(375, 81)"
+183.7271,is_border_particle,"(81,)"
+183.729,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.7291,t,"(375,)"
+183.7292,x,"(375, 81)"
+183.7292,y,"(375, 81)"
+183.7293,data_1,"(375, 81)"
+183.7293,data_2,"(375, 81)"
+183.7294,is_border_particle,"(81,)"
+183.7311,reading heat_equation/solutions/solution_7x7_r1_5...
+183.7312,t,"(375,)"
+183.7313,x,"(375, 81)"
+183.7313,y,"(375, 81)"
+183.7314,data_1,"(375, 81)"
+183.7315,data_2,"(375, 81)"
+183.7315,is_border_particle,"(81,)"
+183.7333,reading heat_equation_manufactured/solutions/solution_7x7_r1_5...
+183.7334,t,"(375,)"
+183.7334,x,"(375, 81)"
+183.7335,y,"(375, 81)"
+183.7336,data_1,"(375, 81)"
+183.7336,data_2,"(375, 81)"
+183.7337,is_border_particle,"(81,)"

@@ -6,10 +6,10 @@ from scipy.integrate import solve_ivp
 from math import sin, cos, pi
 from random import uniform, seed
 from tqdm import tqdm
+import importlib
 
 import heat_equation.dynamics as heat_equation
 import heat_equation_analytical.dynamics as heat_equation_analytical
-import manufactured_solutions.solution_3 as manufactured_solution
 
 from solvers.euler_forward import euler_forward
 from solvers.euler_backward import euler_backward
@@ -26,7 +26,9 @@ from config import (
     dt,
     no_steps,
     border,
+    manufactured_solution_no,
 )
+manufactured_solution = importlib.import_module(manufactured_solution_no)
 from utils.generate_border import generate_border
 
 seed(37)
@@ -48,17 +50,16 @@ def main(use_manufactured_solution: bool):
 
             # T_0.extend([0.1 * cos(8 * pi * x) + noise(0.05)])
             # T_0.extend([noise(0.1)])
-            T_0.extend(
-                [0.3 * sin(14 * x) + 0.8 * cos(x) + 0.3 * cos(14 * y) + noise(0.03)]
-            )
             # T_0.extend(
-            #     [
-            #         4 * heat_equation_analytical.dynamics(t0, 0.5 * x + 2, 0.5 * y + 2)
-            #         + noise(0.01)
-            #     ]
+            #     [0.3 * sin(14 * x) + 0.8 * cos(x) + 0.3 * cos(14 * y) + noise(0.03)]
             # )
+            # T_0.extend([
+            #     4 * heat_equation_analytical.dynamics(t0, 0.5 * x + 2, 0.5 * y + 2)
+            #     + noise(0.01)
+            # ])
             # T_0.extend([5 * gauss(np.zeros(2), np.array([x, y]), 1.5 * border)])
-            # T_0.extend([manufactured_solution.solution(x, y, 0)])
+            # T_0.extend([heat_equation_analytical.dynamics(t0, x, y)])
+            T_0.extend([manufactured_solution.solution(x, y, 0)])
 
             is_border_particle.extend([False])
 
@@ -86,12 +87,14 @@ def main(use_manufactured_solution: bool):
     diagnostics.time_ode()
 
     sol = ruku_4(
-        function=lambda t, y: heat_equation.dynamics(
+        dynamics=lambda t, y: heat_equation.dynamics(
             t,
             y,
             is_border_particle,
             use_manufactured_solution,
         ),
+        border_update_function=manufactured_solution.solution,
+        is_border_particle=is_border_particle,
         initial_condition=y_0,
         t_start=t0,
         t_end=t1,

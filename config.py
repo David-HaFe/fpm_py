@@ -5,25 +5,29 @@ from dataclasses import dataclass
 from math import pi, sin
 from utils.diagnostics import diagnostics
 
+manufactured_solution_no = "manufactured_solutions.solution_5"
+
 ### grid ######################################################################
 # number of particles in the x and y dimension
-no_particles_x = 15
+no_particles_x = 7
 no_particles_y = no_particles_x
 
 # interval where the x and y dimension are contained
 # the result looks like this
-#                +border
-#         x    A    x +border
-#              |
-#         -----+---->
-#              |
-# -border x    |    x
-#      -border
+# [-border,+border]             [+border,+border]
+#                  \           /
+#                   •    A    ·
+#                        |
+#                   -----+---->
+#                        |
+#                   ·    |    ·
+#                  /           \
+# [-border,-border]             [+border,-border]
 border = 2
 
 # choose which boundary condition type to choose
-use_dirichlet = False
-use_neumann = True
+use_dirichlet = True
+use_neumann = False
 
 # assert use_neumann != use_dirichlet
 
@@ -64,28 +68,29 @@ def set_neumann(x, y):
 
 # can be used to throw an arbitrary border condition onto the border
 def set_dirichlet(x, y):
+    return 0
     # bottom or left border, set to 0
-    if (x <= -border) or (y <= -border):
-        result = 0.0
-
-    # edge at then end, set to 1
-    elif (x > border) and (y > border):
-        result = 1.0
-
-    # border on the right, put sine there
-    elif x > border:
-        result = sin(pi / (4 * border) * y + pi / 4)
-
-    # border at the top, put another sine there
-    elif y > border:
-        result = sin(pi / (4 * border) * x + pi / 4)
-
-    # this should never occur
-    else:
-        result = -100
-
-    diagnostics.log_string(f"at {x},{y}: {result}")
-    return result
+    # if (x <= -border) or (y <= -border):
+    #     result = 0.0
+    #
+    # # edge at then end, set to 1
+    # elif (x > border) and (y > border):
+    #     result = 1.0
+    #
+    # # border on the right, put sine there
+    # elif x > border:
+    #     result = sin(pi / (4 * border) * y + pi / 4)
+    #
+    # # border at the top, put another sine there
+    # elif y > border:
+    #     result = sin(pi / (4 * border) * x + pi / 4)
+    #
+    # # this should never occur
+    # else:
+    #     result = -100
+    #
+    # diagnostics.log_string(f"at {x},{y}: {result}")
+    # return result
 
 
 # DO NOT TOUCH
@@ -104,7 +109,7 @@ no_particles = (no_particles_x + 2 * border_thickness) * (
 t0 = 0.0
 
 # end time
-t1 = 5.0
+t1 = 25.0
 
 # number of steps
 steps_per_sec = 15
@@ -131,7 +136,7 @@ kernel_length = kernel_scaling * (dx + dy) / 2
 
 ### physical properties #######################################################
 # heat dissipation constant
-heat_alpha = 0.05
+heat_alpha = 0.2
 
 # mass
 m = 1
@@ -153,10 +158,11 @@ gravity = np.array([0, -0.81])
 # .npz shall not be written out
 compared_files = np.array(
     [
-        # "heat_equation/solutions/solution_10x10_r1_5",
-        # "heat_equation_manufactured/solutions/solution_10x10_r1_5",
-        "heat_equation/solutions/solution_20x20_r1_5",
-        "heat_equation_manufactured/solutions/solution_20x20_r1_5",
+        "heat_equation/solutions/solution_7x7_r1_5",
+        # "heat_equation_analytical/solutions/solution_7x7_r1_5",
+        "heat_equation_manufactured/solutions/solution_7x7_r1_5",
+        # "heat_equation/solutions/solution_20x20_r1_5",
+        # "heat_equation_manufactured/solutions/solution_20x20_r1_5",
         # "heat_equation_analytical/solutions/solution_3x3_r1_5",
         # "heat_equation_analytical/solutions/solution_5x5_r1_5",
         # "heat_equation_analytical/solutions/solution_10x10_r1_5",

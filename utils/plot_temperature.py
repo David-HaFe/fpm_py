@@ -13,6 +13,7 @@ from config import (
     kernel_scaling,
     steps_per_sec,
     playback_speed,
+    border,
 )
 
 
@@ -21,15 +22,18 @@ def plot_temperature_surface(sim_result, file_prefix):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
 
+    # border particle mask
+    interior = ~sim_result.is_border_particle
+
     # xi, yi don't change, just calculate once and continue
     xi = np.linspace(
-        sim_result.x[1, :].min(),
-        sim_result.x[1, :].max(),
+        sim_result.x[1, interior].min(),
+        sim_result.x[1, interior].max(),
         no_particles_x * 3,
     )
     yi = np.linspace(
-        sim_result.y[1, :].min(),
-        sim_result.y[1, :].max(),
+        sim_result.y[1, interior].min(),
+        sim_result.y[1, interior].max(),
         no_particles_y * 3,
     )
     XI, YI = np.meshgrid(xi, yi)
@@ -39,10 +43,12 @@ def plot_temperature_surface(sim_result, file_prefix):
     def update(frame):
         ax.cla()
         ax.set_zlim(2 * z_min, 2 * z_max)
+        ax.set_xlim(-border-.3, border+.3)
+        ax.set_ylim(-border-.3, border+.3)
         ax.set_title(f"t = {sim_result.t[frame]:.2f}")
         ZI = griddata(
-            (sim_result.x[frame, :], sim_result.y[frame, :]),
-            sim_result.data_1[frame, :],
+            (sim_result.x[frame, interior], sim_result.y[frame, interior]),
+            sim_result.data_1[frame, interior],
             (XI, YI),
             method="cubic",
         )

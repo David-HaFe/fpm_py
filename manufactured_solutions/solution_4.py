@@ -1,6 +1,6 @@
 # code for the solution function
-#                -(x² + y²)
-# T(t, x, y) = e
+#                       -y²           -x²
+# T(t, x, y) = cos(at) e   + sin(bt) e
 
 import numpy as np
 from itertools import product
@@ -17,7 +17,8 @@ from config import (
     heat_alpha,
 )
 
-scaling = 1
+a = 1
+b = 2
 
 
 def main():
@@ -48,12 +49,13 @@ def main():
 
 
 def solution(x: float, y: float, t: float = 0):
-    return np.exp(-scaling * (x**2 + y**2))
+    return np.cos(a * t) * np.exp(-(y**2)) + np.sin(b * t) * np.exp(-(x**2))
 
 
 def source_term_heat_equation(t: float, x: float, y: float):
-    euclidean = x**2 + y**2
-    exponential = np.exp(-scaling * euclidean)
-    factor = 4 * scaling * (scaling * euclidean - 1)
-    return - heat_alpha * factor * exponential
-    # return heat_alpha * 4 * (scaling**2) * euclidean * np.exp(-scaling * euclidean)
+    term_1 = -a * np.sin(a * t) * np.exp(-(y**2))
+    term_2 = b * np.cos(b * t) * np.exp(-(x**2))
+    term_3 = (4 * y**2 - 2) * np.exp(-(y**2)) * np.cos(a * t)
+    term_4 = (4 * x**2 - 2) * np.exp(-(x**2)) * np.sin(b * t)
+
+    return term_1 + term_2 - heat_alpha * (term_3 + term_4)

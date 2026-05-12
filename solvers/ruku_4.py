@@ -1,9 +1,11 @@
 import numpy as np
 from types import SimpleNamespace
-
+from utils.generate_border import update_border
 
 def ruku_4(
-    function,
+    dynamics,
+    border_update_function,
+    is_border_particle,
     initial_condition,
     t_start=0,
     t_end=1,
@@ -27,13 +29,15 @@ def ruku_4(
     # iterate up to the last entry of times, not including it, and also start
     # walking index at 1
     for index, time in enumerate(times[:-1], start=1):
-        k[:, 1] = function(time, y)
-        k[:, 2] = function(time + half_dt, y + half_dt * k[:, 1])
-        k[:, 3] = function(time + half_dt, y + half_dt * k[:, 2])
-        k[:, 4] = function(time + dt, y + dt * k[:, 3])
+        k[:, 1] = dynamics(time, y)
+        k[:, 2] = dynamics(time + half_dt, y + half_dt * k[:, 1])
+        k[:, 3] = dynamics(time + half_dt, y + half_dt * k[:, 2])
+        k[:, 4] = dynamics(time + dt, y + dt * k[:, 3])
 
         # final answer
         y += (dt / 6) * (k[:, 1] + 2 * k[:, 2] + 2 * k[:, 3] + k[:, 4])
-        solution[:, index] = y
+        y = solution[:, index] = y
+
+        update_border(time + dt, y, border_update_function, is_border_particle)
 
     return SimpleNamespace(t=times, y=solution)
