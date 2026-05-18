@@ -26,36 +26,37 @@ def equation(t, y, dt, is_border_particle):
         # apply this until the rate of change is sufficiently small
         # initialize error to something meaningless since python doesn't have a
         # do while loop apparently
-        if not is_border_particle[i]:
-            error = 1
-            p_i_test = p_i
-            p_i_dot_test = 0
+        error = 1
+        p_i_test = p_i
+        p_i_dot_test = 0
 
-            diagnostics.log_string("hai")
-            while error > 1e-2:
-                r_dot[i] = np.zeros(2)
-                nabla_p, p_i_dot_test = combo_deal(
-                    r_i=r_i,
-                    v_i=v_i,
-                    function_i=p_i_test,
-                    r=r,
-                    v=v,
-                    function=p,
-                    add_incompressibility=True,
-                )
-                diagnostics.log_full_np_array(p_i_dot_test)
-                # HACK: this should update somehow?
-                p_i_test += dt * p_i_dot_test
-                error = p_i_test - p_i
-
-            v_dot[i] = - nabla_p
-            p_dot[i] = (p_i_test - p_i) / dt
-
-        # wall particle, just pass everything as is
-        else:
+        diagnostics.log_string("hai")
+        while error > 1e-2:
             r_dot[i] = np.zeros(2)
-            v_dot[i] = np.zeros(2)
-            p_dot[i] = np.zeros(1)
+            nabla_p, p_i_dot_test = combo_deal(
+                r_i=r_i,
+                v_i=v_i,
+                function_i=p_i_test,
+                r=r,
+                v=v,
+                function=p,
+                add_incompressibility=True,
+            )
+            diagnostics.log_full_np_array(p_i_dot_test)
+            # HACK: this should update somehow?
+            p_i_test += dt * p_i_dot_test
+            error = p_i_test - p_i
+
+        if not is_border_particle[i]:
+            v_dot[i] = - nabla_p
+
+        # p_dot[i] = (p_i_test - p_i) / dt
+        #
+        # # wall particle, just pass everything as is
+        # else:
+        #     r_dot[i] = np.zeros(2)
+        #     v_dot[i] = np.zeros(2)
+        #     p_dot[i] = np.zeros(1)
 
     r_dot = r_dot.reshape(-1, order="C")
     v_dot = v_dot.reshape(-1, order="C")

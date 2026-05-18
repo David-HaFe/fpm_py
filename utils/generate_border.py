@@ -15,14 +15,13 @@ from config import (
 
 # this is a bit hacky in order to accomodate the manufactured solution
 # set_dirichlet = importlib.import_module(manufactured_solution_no).solution
-
-
 def set_dirichlet(x, y):
     return [0, 0]
 
 
 from utils.diagnostics import diagnostics
 
+default_pressure = 10
 
 # takes the limits and wraps a border of a given strength around everything
 def generate_border(
@@ -43,12 +42,12 @@ def generate_border(
         for _, y in enumerate(y_positions):
             r_0.extend([x, -border - y])
             attribute.extend(set_dirichlet(x, -border - y))
-            p_0.extend([1])
+            p_0.extend([default_pressure])
             is_border_particle.extend([True])
 
             r_0.extend([x, border + y])
             attribute.extend(set_dirichlet(x, border + y))
-            p_0.extend([1])
+            p_0.extend([default_pressure])
             is_border_particle.extend([True])
 
     x_positions = np.linspace(dx, border_thickness * dx, border_thickness)
@@ -63,12 +62,12 @@ def generate_border(
         for _, x in enumerate(x_positions):
             r_0.extend([-border - x, y])
             attribute.extend(set_dirichlet(-border - x, y))
-            p_0.extend([1])
+            p_0.extend([default_pressure])
             is_border_particle.extend([True])
 
             r_0.extend([border + x, y])
             attribute.extend(set_dirichlet(border + x, y))
-            p_0.extend([1])
+            p_0.extend([default_pressure])
             is_border_particle.extend([True])
 
     return r_0, attribute, p_0, is_border_particle

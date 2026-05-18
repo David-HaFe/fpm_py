@@ -3,6 +3,7 @@
 import argparse
 import sys
 import importlib
+import atexit
 
 try:
     play_ding = True
@@ -53,66 +54,71 @@ parser.add_argument("--visualize_kernel", action="store_true")
 
 args = parser.parse_args()
 
-if args.heat_equation:
-    sim_result = heat_equation.main(
-        use_analytical_solution=args.heat_equation_analytical,
-        use_manufactured_solution=args.heat_equation_manufactured,
-    )
+try:
+    if args.heat_equation:
+        sim_result = heat_equation.main(
+            use_analytical_solution=args.heat_equation_analytical,
+            use_manufactured_solution=args.heat_equation_manufactured,
+        )
 
-    file_prefix = "heat_equation"
-    if not args.no_plot:
-        # plot_temperature_map(sim_result, file_prefix)
-        plot_temperature_surface(sim_result, file_prefix)
+        file_prefix = "heat_equation"
+        if not args.no_plot:
+            # plot_temperature_map(sim_result, file_prefix)
+            plot_temperature_surface(sim_result, file_prefix)
 
-    if not args.no_npz:
-        export_to_npz(sim_result, file_prefix)
+        if not args.no_npz:
+            export_to_npz(sim_result, file_prefix)
 
-if args.heat_equation_analytical:
-    sim_result = heat_equation_analytical.main()
+    if args.heat_equation_analytical:
+        sim_result = heat_equation_analytical.main()
 
-    file_prefix = "heat_equation_analytical"
-    if not args.no_plot:
-        # plot_temperature_map(sim_result, file_prefix)
-        plot_temperature_surface(sim_result, file_prefix)
+        file_prefix = "heat_equation_analytical"
+        if not args.no_plot:
+            # plot_temperature_map(sim_result, file_prefix)
+            plot_temperature_surface(sim_result, file_prefix)
 
-    if not args.no_npz:
-        export_to_npz(sim_result, file_prefix)
+        if not args.no_npz:
+            export_to_npz(sim_result, file_prefix)
 
-if args.heat_equation_manufactured:
-    sim_result = manufactured_solution.main()
+    if args.heat_equation_manufactured:
+        sim_result = manufactured_solution.main()
 
-    file_prefix = "heat_equation_manufactured"
-    if not args.no_plot:
-        # plot_temperature_map(sim_result, file_prefix)
-        plot_temperature_surface(sim_result, file_prefix)
+        file_prefix = "heat_equation_manufactured"
+        if not args.no_plot:
+            # plot_temperature_map(sim_result, file_prefix)
+            plot_temperature_surface(sim_result, file_prefix)
 
-    if not args.no_npz:
-        export_to_npz(sim_result, file_prefix)
+        if not args.no_npz:
+            export_to_npz(sim_result, file_prefix)
 
-if args.navier_stokes_incompressible:
-    t, x, y, is_border_particle = navier_stokes_incompressible.main()
+    if args.navier_stokes_incompressible:
+        t, x, y, is_border_particle = navier_stokes_incompressible.main()
 
-    file_prefix = "navier_stokes_incompressible"
-    if not args.no_plot:
-        plot_particles(t, x, y, is_border_particle, file_prefix)
+        file_prefix = "navier_stokes_incompressible"
+        if not args.no_plot:
+            plot_particles(t, x, y, is_border_particle, file_prefix)
 
-if args.navier_stokes_compressible:
-    t, x, y, is_border_particle = navier_stokes_compressible.main()
+    if args.navier_stokes_compressible:
+        t, x, y, is_border_particle = navier_stokes_compressible.main()
 
-    file_prefix = "navier_stokes_compressible"
-    if not args.no_plot:
-        plot_particles(t, x, y, is_border_particle, file_prefix)
+        file_prefix = "navier_stokes_compressible"
+        if not args.no_plot:
+            plot_particles(t, x, y, is_border_particle, file_prefix)
 
-# show kernel function, or whatever is thrown in there
-if args.visualize_kernel:
-    visualize_kernel()
+    # show kernel function, or whatever is thrown in there
+    if args.visualize_kernel:
+        visualize_kernel()
 
-if args.compare_scatter:
-    compare_scatter()
+    if args.compare_scatter:
+        compare_scatter()
 
-if args.compare_mse:
-    compare_MSE()
+    if args.compare_mse:
+        compare_MSE()
 
-diagnostics.print_diagnostics()
-if play_ding:
-    playsound("misc/ding.wav")
+    diagnostics.print_diagnostics()
+    if play_ding:
+        playsound("misc/ding.wav")
+
+except Exception as e:
+    playsound("misc/error.wav")
+    raise e

@@ -109,7 +109,7 @@ no_particles = (no_particles_x + 2 * border_thickness) * (
 t0 = 0.0
 
 # end time
-t1 = 4.2
+t1 = 0.7
 
 # number of steps
 steps_per_sec = 20
@@ -128,7 +128,7 @@ dt = (t1 - t0) / no_steps
 
 ### kernel ####################################################################
 # factor by which kernel support should exceed initial grid distance
-kernel_scaling = 3.5
+kernel_scaling = 2.0
 
 # DO NOT TOUCH
 # actual kernel support length based on kernel scaling
