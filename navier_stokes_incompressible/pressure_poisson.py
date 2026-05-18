@@ -1,7 +1,7 @@
 import numpy as np
 
 from utils.diagnostics import diagnostics
-from kernels.gauss import gauss, nabla, laplace
+from kernels.gauss import gauss, nabla, laplace, combo_deal
 from config import (
     no_particles,
 )
@@ -21,7 +21,6 @@ def equation(t, y, dt, is_border_particle):
     r = r.reshape(-1, 2)
     v = v.reshape(-1, 2)
     p = p.reshape(-1, 1)
-    diagnostics.log_np_array(p)
 
     for i, (r_i, v_i, p_i) in enumerate(zip(r, v, p)):
         # apply this until the rate of change is sufficiently small
@@ -30,9 +29,12 @@ def equation(t, y, dt, is_border_particle):
         if not is_border_particle[i]:
             error = 1
             p_i_test = p_i
+            p_i_dot_test = 0
+
+            diagnostics.log_string("hai")
             while error > 1e-2:
                 r_dot[i] = np.zeros(2)
-                p_i_dot_test = laplace(
+                nabla_p, p_i_dot_test = combo_deal(
                     r_i=r_i,
                     v_i=v_i,
                     function_i=p_i_test,
@@ -41,22 +43,19 @@ def equation(t, y, dt, is_border_particle):
                     function=p,
                     add_incompressibility=True,
                 )
-                diagnostics.log_string("hai")
                 diagnostics.log_full_np_array(p_i_dot_test)
                 # HACK: this should update somehow?
-                error = p_i_dot_test
                 p_i_test += dt * p_i_dot_test
+                error = p_i_test - p_i
 
-            p_dot[i] = p_i_dot_test
+            v_dot[i] = - nabla_p
+            p_dot[i] = (p_i_test - p_i) / dt
 
         # wall particle, just pass everything as is
         else:
             r_dot[i] = np.zeros(2)
             v_dot[i] = np.zeros(2)
             p_dot[i] = np.zeros(1)
-
-    diagnostics.log_np_array(v_dot)
-    diagnostics.log_np_array(p_dot)
 
     r_dot = r_dot.reshape(-1, order="C")
     v_dot = v_dot.reshape(-1, order="C")

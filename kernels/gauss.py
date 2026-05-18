@@ -55,17 +55,12 @@ def _solve_least_squares_gauss(
 
     for j, (r_j, function_j) in enumerate(zip(r, function)):
         kernel = gauss(r_i, r_j)
-        if add_incompressibility:
-            diagnostics.log_string(f"kernel: {kernel}")
         if kernel > 0:
             dr = r_j - r_i
             D[count] = [dr[0], dr[1], 0.5 * dr[0] ** 2, dr[0] * dr[1], 0.5 * dr[1] ** 2]
             W[count] = np.sqrt(kernel)
             b[count] = np.squeeze(function_i - function_j)
             count += 1
-
-    if add_incompressibility:
-        diagnostics.log_string(f"count 1: {count}")
 
     # append neumannn boundary condition, since we found a border point
     if use_neumann and (abs(r_i[0]) == border) or (abs(r_i[1]) == border):
@@ -81,12 +76,12 @@ def _solve_least_squares_gauss(
 
     D = D[:count]
 
+    # TODO: make sure that neumann border is handled properly as well,
+    #       since the leftmost entries should be 0, and not 1
     # PPE
     if add_incompressibility:
         D = np.hstack([np.ones((D.shape[0], 1)), D])
-        diagnostics.log_np_array(D)
         D = np.vstack([D, [0, 0, 0, 1, 0, 1]])
-        diagnostics.log_np_array(D)
         W[count] = 1
         nabla_dot_product = (
             nabla(
@@ -104,20 +99,12 @@ def _solve_least_squares_gauss(
                 add_incompressibility=False,
             )[1]
         )
-        if add_incompressibility:
-            diagnostics.log_string("hellou")
 
         b[count] = nabla_dot_product
         count += 1
 
     W = W[:count]
     b = b[:count]
-
-    if add_incompressibility:
-        diagnostics.log_string(f"count 2: {count}")
-        diagnostics.log_full_np_array(D)
-        diagnostics.log_full_np_array(W)
-        diagnostics.log_full_np_array(b)
 
     D_transpose_W = D.T * W[None, :]
     coefficients = np.linalg.solve(-D_transpose_W @ D, D_transpose_W @ b)
@@ -226,3 +213,40 @@ def laplace(
 
     # diagnostics.time_laplace()
     return result
+
+def combo_deal(
+    r_i: np.array = None,
+    v_i: np.array = None,
+    function_i: np.array = None,
+    r: np.array = None,
+    v: np.array = None,
+    function: np.array = None,
+    add_incompressibility: bool = False,
+):
+    nabla_operator = np.zeros(2)
+
+    coefficients = _solve_least_squares_gauss(
+        r_i=r_i,
+        v_i=v_i,
+        function_i=function_i,
+        r=r,
+        v=v,
+        function=function,
+        add_incompressibility=add_incompressibility,
+    )
+
+    for j, r_j in enumerate(r):
+        nabla_operator[0] = (
+            coefficients[0]
+            + coefficients[2] * (r_j[0] - r_i[0])
+            + coefficients[3] * (r_j[1] - r_i[1])
+        )
+        nabla_operator[1] = (
+            coefficients[1]
+            + coefficients[4] * (r_j[1] - r_i[1])
+            + coefficients[3] * (r_j[0] - r_i[0])
+        )
+
+    laplace_operator = coefficients[2] + coefficients[4]
+
+    return nabla_operator, laplace_operator

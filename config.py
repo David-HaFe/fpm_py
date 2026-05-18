@@ -9,7 +9,7 @@ manufactured_solution_no = "manufactured_solutions.solution_3"
 
 ### grid ######################################################################
 # number of particles in the x and y dimension
-no_particles_x = 5
+no_particles_x = 7
 no_particles_y = no_particles_x
 
 # interval where the x and y dimension are contained
@@ -34,7 +34,7 @@ use_neumann = False
 # number of layers that the border has, spaced with same spacing as
 # inside particles
 if use_dirichlet:
-    border_thickness = 1
+    border_thickness = 3
 else:
     # DO NOT TOUCH
     # border has to be 0 if dirichlet is not used
@@ -109,7 +109,7 @@ no_particles = (no_particles_x + 2 * border_thickness) * (
 t0 = 0.0
 
 # end time
-t1 = 1.3
+t1 = 4.2
 
 # number of steps
 steps_per_sec = 20
