@@ -2,6 +2,7 @@ import numpy as np
 from types import SimpleNamespace
 from utils.diagnostics import diagnostics
 
+
 def chorin(
     forward_equation,
     projection_equation,
@@ -19,7 +20,6 @@ def chorin(
     # write initial condition to state
     y = initial_condition
     solution[:, 0] = initial_condition
-
 
     for index, time in enumerate(times[:-1], start=1):
         # intermediate step

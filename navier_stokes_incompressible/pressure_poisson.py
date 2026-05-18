@@ -21,6 +21,7 @@ def equation(t, y, dt, is_border_particle):
     r = r.reshape(-1, 2)
     v = v.reshape(-1, 2)
     p = p.reshape(-1, 1)
+    diagnostics.log_np_array(p)
 
     for i, (r_i, v_i, p_i) in enumerate(zip(r, v, p)):
         # apply this until the rate of change is sufficiently small
@@ -28,18 +29,20 @@ def equation(t, y, dt, is_border_particle):
         # do while loop apparently
         if not is_border_particle[i]:
             error = 1
-            p_i_test = p[i]
+            p_i_test = p_i
             while error > 1e-2:
                 r_dot[i] = np.zeros(2)
-                v_dot[i], p_i_dot_test = _pressure_gradient(
-                    r_i,
-                    v_i,
-                    p_i_test,
-                    r,
-                    v,
-                    p,
-                    dt,
+                p_i_dot_test = laplace(
+                    r_i=r_i,
+                    v_i=v_i,
+                    function_i=p_i_test,
+                    r=r,
+                    v=v,
+                    function=p,
+                    add_incompressibility=True,
                 )
+                diagnostics.log_string("hai")
+                diagnostics.log_full_np_array(p_i_dot_test)
                 # HACK: this should update somehow?
                 error = p_i_dot_test
                 p_i_test += dt * p_i_dot_test

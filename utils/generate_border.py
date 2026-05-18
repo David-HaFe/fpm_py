@@ -17,7 +17,8 @@ from config import (
 # set_dirichlet = importlib.import_module(manufactured_solution_no).solution
 
 
-def set_dirichlet(x, y): return [0, 0]
+def set_dirichlet(x, y):
+    return [0, 0]
 
 
 from utils.diagnostics import diagnostics

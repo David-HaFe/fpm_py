@@ -29,7 +29,12 @@ def dynamics(t, y, is_border_particle, use_manufactured_solution):
     def compute_particle(a):
         if not is_border_particle[a]:
             r_dot[a] = np.zeros(2)
-            T_dot[a] = heat_alpha * laplace(r[a], T[a], r, T)
+            T_dot[a] = heat_alpha * laplace(
+                r_i=r[a],
+                function_i=T[a],
+                r=r,
+                function=T,
+            )
             if use_manufactured_solution:
                 T_dot[a] += source_term_heat_equation(t, r[a][0], r[a][1])
         else:

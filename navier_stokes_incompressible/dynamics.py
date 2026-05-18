@@ -39,16 +39,29 @@ def dynamics(t, y, is_border_particle):
             acceleration_i = (
                 # nu[i]*laplace(r_i, v_i, r, v)
                 gravity
-                + nu[i] * laplace(r_i, v_i, r, v)
+                + nu[i]
+                * np.array(
+                    [
+                        laplace(
+                            r_i=r_i,
+                            function_i=v_i[0],
+                            r=r,
+                            function=v[:, 0],
+                        ),
+                        laplace(
+                            r_i=r_i,
+                            function_i=v_i[1],
+                            r=r,
+                            function=v[:, 1],
+                        ),
+                    ]
+                )
             )
             r_dot[i] = v_i
             v_dot[i] = acceleration_i
         else:
             r_dot[i] = np.zeros(2)
             v_dot[i] = np.zeros(2)
-
-        # don't update pressure here, just push through
-        p_dot[i] = np.zeros(1)
 
     r_dot = r_dot.reshape(-1, order="C")
     v_dot = v_dot.reshape(-1, order="C")

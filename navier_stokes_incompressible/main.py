@@ -39,7 +39,8 @@ def main():
         for _, x in enumerate(x_positions):
             r_0.extend([x, y])
 
-            x_vel = y  # proportional to y coordinate, resulting in a shear
+            # x_vel = y  # proportional to y coordinate, resulting in a shear
+            x_vel = 0
 
             v_0.extend([x_vel, 0])
             p_0.extend([1])
@@ -84,7 +85,7 @@ def main():
             dt,
             is_border_particle,
         ),
-        border_update=lambda t: t, # dummy entry
+        border_update=lambda t: t,  # dummy entry
         initial_condition=y_0,
         t_start=t0,
         t_end=t1,

@@ -34,7 +34,7 @@ Additionally, you can also add
 
 An example of a valid command would be
 ```
-python3 main.py --heat_equation --heat_equation_analytical --no_plot --compare
+python3 main.py --heat_equation --heat_equation_analytical --no_plot --compare_mse
 ```
 which runs the heat equation example using the PDE and analytical solution without a plot for additional speed,
 and compares them afterwards.
@@ -55,11 +55,12 @@ Once this is done, you will need to install the packages
 * matplotlib
 * scipy
 * pandas
+* tqdm
 * playsound3 (if you want the sound effect when the simulation is done)
 
 which can be done via
 ```
-pip install numpy matplotlib scipy pandas playsound3
+pip install numpy matplotlib scipy pandas tqdm
 ```
 
 

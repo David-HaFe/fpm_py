@@ -8,6 +8,7 @@ from config import (
     use_neumann,
     set_neumann,
     border,
+    dt,
 )
 
 alpha = 6.25  # don't change this, otherwise kernel looks not very good
@@ -37,10 +38,13 @@ def gauss(r_i: np.array, r_j: np.array, h=kernel_length):
 
 
 def _solve_least_squares_gauss(
-    r_i: np.array,
-    function_i: np.array,
-    r: np.array,
-    function: np.array,
+    r_i: np.array = None,
+    v_i: np.array = None,
+    function_i: np.array = None,
+    r: np.array = None,
+    v: np.array = None,
+    function: np.array = None,
+    add_incompressibility: bool = False,
 ):
     # diagnostics.time_least_squares()
 
@@ -51,12 +55,17 @@ def _solve_least_squares_gauss(
 
     for j, (r_j, function_j) in enumerate(zip(r, function)):
         kernel = gauss(r_i, r_j)
+        if add_incompressibility:
+            diagnostics.log_string(f"kernel: {kernel}")
         if kernel > 0:
             dr = r_j - r_i
             D[count] = [dr[0], dr[1], 0.5 * dr[0] ** 2, dr[0] * dr[1], 0.5 * dr[1] ** 2]
             W[count] = np.sqrt(kernel)
-            b[count] = function_i - function_j
+            b[count] = np.squeeze(function_i - function_j)
             count += 1
+
+    if add_incompressibility:
+        diagnostics.log_string(f"count 1: {count}")
 
     # append neumannn boundary condition, since we found a border point
     if use_neumann and (abs(r_i[0]) == border) or (abs(r_i[1]) == border):
@@ -71,8 +80,44 @@ def _solve_least_squares_gauss(
             count += 1
 
     D = D[:count]
+
+    # PPE
+    if add_incompressibility:
+        D = np.hstack([np.ones((D.shape[0], 1)), D])
+        diagnostics.log_np_array(D)
+        D = np.vstack([D, [0, 0, 0, 1, 0, 1]])
+        diagnostics.log_np_array(D)
+        W[count] = 1
+        nabla_dot_product = (
+            nabla(
+                r_i=r_i,
+                function_i=v_i[0],
+                r=r,
+                function=v[:, 0],
+                add_incompressibility=False,
+            )[0]
+            + nabla(
+                r_i=r_i,
+                function_i=v_i[1],
+                r=r,
+                function=v[:, 1],
+                add_incompressibility=False,
+            )[1]
+        )
+        if add_incompressibility:
+            diagnostics.log_string("hellou")
+
+        b[count] = nabla_dot_product
+        count += 1
+
     W = W[:count]
     b = b[:count]
+
+    if add_incompressibility:
+        diagnostics.log_string(f"count 2: {count}")
+        diagnostics.log_full_np_array(D)
+        diagnostics.log_full_np_array(W)
+        diagnostics.log_full_np_array(b)
 
     D_transpose_W = D.T * W[None, :]
     coefficients = np.linalg.solve(-D_transpose_W @ D, D_transpose_W @ b)
@@ -92,15 +137,27 @@ def _solve_least_squares_gauss(
 
 
 def nabla(
-    r_i: np.array,
-    function_i: np.array,
-    r: np.array,
-    function: np.array,
+    r_i: np.array = None,
+    v_i: np.array = None,
+    function_i: np.array = None,
+    r: np.array = None,
+    v: np.array = None,
+    function: np.array = None,
+    add_incompressibility: bool = False,
 ):
     # diagnostics.time_nabla()
 
-    result = np.zeros((2, len(function_i)))
-    coefficients = _solve_least_squares_gauss(r_i, function_i, r, function)
+    result = np.zeros(2)
+
+    coefficients = _solve_least_squares_gauss(
+        r_i=r_i,
+        v_i=v_i,
+        function_i=function_i,
+        r=r,
+        v=v,
+        function=function,
+        add_incompressibility=add_incompressibility,
+    )
 
     # TODO: find out if this really is how you are supposed to
     # calculate the gradient
@@ -121,23 +178,51 @@ def nabla(
     return result
 
 
+# # returns the nabla operator, but as a scalar product with the function
+# # basically just a wrapper
+# def nabla_product(
+#     r_i: np.array = None,
+#     v_i: np.array = None,
+#     function_i: np.array = None,
+#     r: np.array = None,
+#     v: np.array = None,
+#     function: np.array = None,
+#     add_incompressibility: bool = False,
+# ):
+#     nabla_result = nabla(
+#         r_i=r_i,
+#         v_i=v_i,
+#         function_i=function_i,
+#         r=r,
+#         v=v,
+#         function=function,
+#         add_incompressibility=add_incompressibility,
+#     )
+#     return nabla_result[0] + nabla_result[1]
+
+
 def laplace(
-    r_i: np.array,
-    function_i: np.array,
-    r: np.array,
-    function: np.array,
+    r_i: np.array = None,
+    v_i: np.array = None,
+    function_i: np.array = None,
+    r: np.array = None,
+    v: np.array = None,
+    function: np.array = None,
+    add_incompressibility: bool = False,
 ):
     # diagnostics.time_laplace()
 
-    function_dimension = function_i.shape[0]
+    coefficients = _solve_least_squares_gauss(
+        r_i=r_i,
+        v_i=v_i,
+        function_i=function_i,
+        r=r,
+        v=v,
+        function=function,
+        add_incompressibility=add_incompressibility,
+    )
 
-    result = np.zeros(function_dimension)
-
-    for i in range(function_dimension):
-        coefficients = _solve_least_squares_gauss(r_i, function_i[i], r, function[:, i])
-
-        temp_result = coefficients[2] + coefficients[4]
-        result[i] = temp_result
+    result = coefficients[2] + coefficients[4]
 
     # diagnostics.time_laplace()
     return result

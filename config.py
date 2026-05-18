@@ -1,4 +1,4 @@
-#true several constants etc. that should be used throughout the model
+# true several constants etc. that should be used throughout the model
 
 import numpy as np
 from dataclasses import dataclass
@@ -9,7 +9,7 @@ manufactured_solution_no = "manufactured_solutions.solution_3"
 
 ### grid ######################################################################
 # number of particles in the x and y dimension
-no_particles_x = 11
+no_particles_x = 5
 no_particles_y = no_particles_x
 
 # interval where the x and y dimension are contained
@@ -34,7 +34,7 @@ use_neumann = False
 # number of layers that the border has, spaced with same spacing as
 # inside particles
 if use_dirichlet:
-    border_thickness = 2
+    border_thickness = 1
 else:
     # DO NOT TOUCH
     # border has to be 0 if dirichlet is not used
@@ -109,7 +109,7 @@ no_particles = (no_particles_x + 2 * border_thickness) * (
 t0 = 0.0
 
 # end time
-t1 = 15.0
+t1 = 1.3
 
 # number of steps
 steps_per_sec = 20
@@ -128,7 +128,7 @@ dt = (t1 - t0) / no_steps
 
 ### kernel ####################################################################
 # factor by which kernel support should exceed initial grid distance
-kernel_scaling = 1.5
+kernel_scaling = 3.5
 
 # DO NOT TOUCH
 # actual kernel support length based on kernel scaling
@@ -166,14 +166,12 @@ compared_files = np.array(
         # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_025",
         # "heat_equation/solutions/solution_11x11_r1_5_dt0_0125",
         # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_0125",
-
         # "heat_equation/solutions/solution_6x6_r1_5_dt0_05",
         # "heat_equation_manufactured/solutions/solution_6x6_r1_5_dt0_05",
         # "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
         # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
         # "heat_equation/solutions/solution_21x21_r2_0_dt0_05",
         # "heat_equation_manufactured/solutions/solution_21x21_r2_0_dt0_05",
-
         "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
         "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
         "heat_equation/solutions/solution_11x11_r2_0_dt0_05",
