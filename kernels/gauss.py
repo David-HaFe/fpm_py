@@ -107,7 +107,14 @@ def _solve_least_squares_gauss(
     b = b[:count]
 
     D_transpose_W = D.T * W[None, :]
-    coefficients = np.linalg.solve(-D_transpose_W @ D, D_transpose_W @ b)
+    try:
+        coefficients = np.linalg.solve(-D_transpose_W @ D, D_transpose_W @ b)
+    except np.linalg.LinAlgError as e:
+        diagnostics.log_string("Crikey the program crashed")
+        diagnostics.log_np_array(D)
+        diagnostics.log_np_array(W)
+        diagnostics.log_np_array(b)
+        raise e
 
     # coefficients = np.linalg.lstsq(-W[:, None] * D, b)[0]
     # coefficients = np.linalg.lstsq(-W @ D, b)[0]

@@ -21,7 +21,7 @@ def set_dirichlet(x, y):
 
 from utils.diagnostics import diagnostics
 
-default_pressure = 10
+default_pressure = 1
 
 # takes the limits and wraps a border of a given strength around everything
 def generate_border(

@@ -59,9 +59,10 @@ def dynamics(t, y, is_border_particle):
             )
             r_dot[i] = v_i
             v_dot[i] = acceleration_i
-        else:
-            r_dot[i] = np.zeros(2)
-            v_dot[i] = np.zeros(2)
+        #
+        # else:
+        #     r_dot[i] = np.zeros(2)
+        #     v_dot[i] = np.zeros(2)
 
     r_dot = r_dot.reshape(-1, order="C")
     v_dot = v_dot.reshape(-1, order="C")

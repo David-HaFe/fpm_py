@@ -6,10 +6,10 @@ import importlib
 import atexit
 
 try:
-    play_ding = True
+    play_sounds = True
     from playsound3 import playsound
 except ImportError:
-    play_ding = False
+    play_sounds = False
 
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
@@ -116,9 +116,10 @@ try:
         compare_MSE()
 
     diagnostics.print_diagnostics()
-    if play_ding:
+    if play_sounds:
         playsound("misc/ding.wav")
 
 except Exception as e:
-    playsound("misc/error.wav")
+    if play_sounds:
+        playsound("misc/error.wav")
     raise e
