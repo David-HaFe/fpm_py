@@ -13,7 +13,7 @@ def ruku_4(
     # calculate stuff
     no_iterations = int((t_end - t_start) / dt)
     times = np.linspace(t_start, t_end, no_iterations)
-    solution = np.empty((np.size(initial_condition), np.size(times)))
+    solution = np.zeros((np.size(initial_condition), np.size(times)))
 
     # set inital condition as starting value
     y = initial_condition

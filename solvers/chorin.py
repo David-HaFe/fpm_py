@@ -2,10 +2,10 @@ import numpy as np
 from types import SimpleNamespace
 from utils.diagnostics import diagnostics
 
-
 def chorin(
     forward_equation,
     projection_equation,
+    border_update,
     initial_condition,
     t_start,
     t_end,
@@ -13,31 +13,24 @@ def chorin(
 ):
     # set up solution array
     no_iterations = int((t_end - t_start) / dt)
-    solution = np.empty((np.size(initial_condition), no_iterations + 1))
-    times = np.empty(no_iterations + 1)
+    times = np.linspace(t_start, t_end, no_iterations)
+    solution = np.zeros((np.size(initial_condition), np.size(times)))
 
     # write initial condition to state
-    t = t_start
     y = initial_condition
-
     solution[:, 0] = initial_condition
-    times[0] = t_start
 
-    for i in range(1, no_iterations + 1):
+
+    for index, time in enumerate(times[:-1], start=1):
         # intermediate step
-        y = y + dt * forward_equation(t, y)
-
-        diagnostics.log_np_array(y)
+        y = y + dt * forward_equation(time, y)
 
         # apply this until the rate of change is sufficiently small
         # initialize error to something meaningless since python doesn't have a
         # do while loop apparently
         # poisson pressure equation
-        dy = projection_equation(t, y)
-        y = y + dt * dy
+        y = y + dt * projection_equation(time, y)
 
-        t += dt
-        times[i] = t
-        solution[:, i] = y
+        solution[:, index] = y
 
     return SimpleNamespace(t=times, y=solution)

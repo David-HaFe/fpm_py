@@ -96,7 +96,7 @@ def compare_MSE():
             print(" | ".join(f"{error:<{width}.5f}" for error in errors[index_1]))
 
         # convergence plot
-        compared_parameter = "step"
+        compared_parameter = "radius"
 
         plt.clf()
         plt.grid()

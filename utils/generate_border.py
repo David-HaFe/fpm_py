@@ -14,7 +14,11 @@ from config import (
 )
 
 # this is a bit hacky in order to accomodate the manufactured solution
-set_dirichlet = importlib.import_module(manufactured_solution_no).solution
+# set_dirichlet = importlib.import_module(manufactured_solution_no).solution
+
+
+def set_dirichlet(x, y): return [0, 0]
+
 
 from utils.diagnostics import diagnostics
 
@@ -37,12 +41,12 @@ def generate_border(
     for _, x in enumerate(x_positions):
         for _, y in enumerate(y_positions):
             r_0.extend([x, -border - y])
-            attribute.extend([set_dirichlet(x, -border - y)])
+            attribute.extend(set_dirichlet(x, -border - y))
             p_0.extend([1])
             is_border_particle.extend([True])
 
             r_0.extend([x, border + y])
-            attribute.extend([set_dirichlet(x, border + y)])
+            attribute.extend(set_dirichlet(x, border + y))
             p_0.extend([1])
             is_border_particle.extend([True])
 
@@ -57,12 +61,12 @@ def generate_border(
     for _, y in enumerate(y_positions):
         for _, x in enumerate(x_positions):
             r_0.extend([-border - x, y])
-            attribute.extend([set_dirichlet(-border - x, y)])
+            attribute.extend(set_dirichlet(-border - x, y))
             p_0.extend([1])
             is_border_particle.extend([True])
 
             r_0.extend([border + x, y])
-            attribute.extend([set_dirichlet(border + x, y)])
+            attribute.extend(set_dirichlet(border + x, y))
             p_0.extend([1])
             is_border_particle.extend([True])
 

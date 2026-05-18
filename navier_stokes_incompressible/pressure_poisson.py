@@ -64,81 +64,81 @@ def equation(t, y, dt, is_border_particle):
     return y_dot
 
 
-def _pressure_gradient(
-    r_i: np.array,
-    v_i: np.array,
-    p_i: np.array,
-    r: np.array,
-    v: np.array,
-    p: np.array,
-    dt: float,
-):
-    result = np.zeros(2)
-    coefficients = _solve_least_squares_ppe(r_i, v_i, p_i, r, v, p, dt)
-
-    # TODO: find out if this really is how you are supposed to
-    # calculate the gradient
-    for j, r_j in enumerate(r):
-        result[0] += (
-            coefficients[1]
-            - coefficients[3] * (r_j[0] - r_i[0])
-            - coefficients[4] * (r_i[1] - r_j[1])
-        )
-        result[1] += (
-            coefficients[2]
-            - coefficients[4] * (r_j[1] - r_i[1])
-            - coefficients[5] * (r_j[0] - r_i[0])
-        )
-
-        # TODO: check if this is the correct pressure update
-        pressure = coefficients[3] + coefficients[5]
-
-    diagnostics.log_np_array(result)
-    return result, pressure
-
-
-# TODO: add boundary condition
-def _solve_least_squares_ppe(
-    r_i: np.array,
-    v_i: np.array,
-    p_i: np.array,
-    r: np.array,
-    v: np.array,
-    p: np.array,
-    dt: float,
-):
-    D = []
-    W = []
-    b = []
-    for j, (r_j, p_j) in enumerate(zip(r, p)):
-        kernel = gauss(r_i, r_j)
-        if kernel > 0:
-            D.append(
-                [
-                    1,
-                    r_j[0] - r_i[0],
-                    r_j[1] - r_i[1],
-                    (r_j[0] - r_i[0]) * (r_j[0] - r_i[0]) * 0.5,
-                    (r_j[0] - r_i[0]) * (r_j[1] - r_i[1]),
-                    (r_j[1] - r_i[1]) * (r_j[1] - r_i[1]) * 0.5,
-                ]
-            )
-            b.extend([p_j[0]])
-            W.extend([np.sqrt(kernel)])
-
-    # PPE
-    D.append([1, 0, 0, 0, 0, 0])
-    W.extend([1])
-    nabla_operator = nabla(r_i, v_i, r, v)
-    nabla_dot_product = (nabla_operator[0][0] + nabla_operator[1][1]) / dt
-    b.extend([nabla_dot_product])
-
-    D = np.array(D)
-    b = np.array(b)
-    W = np.diag(W)
-
-    coefficients_ppe = np.linalg.lstsq(-W @ D, b)[0]
-
-    diagnostics.log_np_array(coefficients_ppe)
-
-    return coefficients_ppe
+# def _pressure_gradient(
+#     r_i: np.array,
+#     v_i: np.array,
+#     p_i: np.array,
+#     r: np.array,
+#     v: np.array,
+#     p: np.array,
+#     dt: float,
+# ):
+#     result = np.zeros(2)
+#     coefficients = _solve_least_squares_ppe(r_i, v_i, p_i, r, v, p, dt)
+#
+#     # TODO: find out if this really is how you are supposed to
+#     # calculate the gradient
+#     for j, r_j in enumerate(r):
+#         result[0] += (
+#             coefficients[1]
+#             - coefficients[3] * (r_j[0] - r_i[0])
+#             - coefficients[4] * (r_i[1] - r_j[1])
+#         )
+#         result[1] += (
+#             coefficients[2]
+#             - coefficients[4] * (r_j[1] - r_i[1])
+#             - coefficients[5] * (r_j[0] - r_i[0])
+#         )
+#
+#         # TODO: check if this is the correct pressure update
+#         pressure = coefficients[3] + coefficients[5]
+#
+#     diagnostics.log_np_array(result)
+#     return result, pressure
+#
+#
+# # TODO: add boundary condition
+# def _solve_least_squares_ppe(
+#     r_i: np.array,
+#     v_i: np.array,
+#     p_i: np.array,
+#     r: np.array,
+#     v: np.array,
+#     p: np.array,
+#     dt: float,
+# ):
+#     D = []
+#     W = []
+#     b = []
+#     for j, (r_j, p_j) in enumerate(zip(r, p)):
+#         kernel = gauss(r_i, r_j)
+#         if kernel > 0:
+#             D.append(
+#                 [
+#                     1,
+#                     r_j[0] - r_i[0],
+#                     r_j[1] - r_i[1],
+#                     (r_j[0] - r_i[0]) * (r_j[0] - r_i[0]) * 0.5,
+#                     (r_j[0] - r_i[0]) * (r_j[1] - r_i[1]),
+#                     (r_j[1] - r_i[1]) * (r_j[1] - r_i[1]) * 0.5,
+#                 ]
+#             )
+#             b.extend([p_j[0]])
+#             W.extend([np.sqrt(kernel)])
+#
+#     # PPE
+#     D.append([1, 0, 0, 0, 0, 0])
+#     W.extend([1])
+#     nabla_operator = nabla(r_i, v_i, r, v)
+#     nabla_dot_product = (nabla_operator[0][0] + nabla_operator[1][1]) / dt
+#     b.extend([nabla_dot_product])
+#
+#     D = np.array(D)
+#     b = np.array(b)
+#     W = np.diag(W)
+#
+#     coefficients_ppe = np.linalg.lstsq(-W @ D, b)[0]
+#
+#     diagnostics.log_np_array(coefficients_ppe)
+#
+#     return coefficients_ppe

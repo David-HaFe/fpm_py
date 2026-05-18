@@ -129,8 +129,15 @@ def laplace(
 ):
     # diagnostics.time_laplace()
 
-    coefficients = _solve_least_squares_gauss(r_i, function_i, r, function)
-    result = coefficients[2] + coefficients[4]
+    function_dimension = function_i.shape[0]
+
+    result = np.zeros(function_dimension)
+
+    for i in range(function_dimension):
+        coefficients = _solve_least_squares_gauss(r_i, function_i[i], r, function[:, i])
+
+        temp_result = coefficients[2] + coefficients[4]
+        result[i] = temp_result
 
     # diagnostics.time_laplace()
     return result

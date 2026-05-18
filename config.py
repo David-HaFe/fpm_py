@@ -1,4 +1,4 @@
-# several constants etc. that should be used throughout the model
+#true several constants etc. that should be used throughout the model
 
 import numpy as np
 from dataclasses import dataclass
@@ -34,7 +34,7 @@ use_neumann = False
 # number of layers that the border has, spaced with same spacing as
 # inside particles
 if use_dirichlet:
-    border_thickness = 1
+    border_thickness = 2
 else:
     # DO NOT TOUCH
     # border has to be 0 if dirichlet is not used
@@ -128,7 +128,7 @@ dt = (t1 - t0) / no_steps
 
 ### kernel ####################################################################
 # factor by which kernel support should exceed initial grid distance
-kernel_scaling = 2.0
+kernel_scaling = 1.5
 
 # DO NOT TOUCH
 # actual kernel support length based on kernel scaling
@@ -158,34 +158,37 @@ gravity = np.array([0, -0.81])
 # .npz shall not be written out
 compared_files = np.array(
     [
-        "heat_equation/solutions/solution_11x11_r1_5_dt0_1",
-        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_1",
-        "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
-        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
-        "heat_equation/solutions/solution_11x11_r1_5_dt0_025",
-        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_025",
-        "heat_equation/solutions/solution_11x11_r1_5_dt0_0125",
-        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_0125",
+        # "heat_equation/solutions/solution_11x11_r1_5_dt0_1",
+        # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_1",
+        # "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
+        # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
+        # "heat_equation/solutions/solution_11x11_r1_5_dt0_025",
+        # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_025",
+        # "heat_equation/solutions/solution_11x11_r1_5_dt0_0125",
+        # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_0125",
+
         # "heat_equation/solutions/solution_6x6_r1_5_dt0_05",
         # "heat_equation_manufactured/solutions/solution_6x6_r1_5_dt0_05",
         # "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
         # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
         # "heat_equation/solutions/solution_21x21_r2_0_dt0_05",
         # "heat_equation_manufactured/solutions/solution_21x21_r2_0_dt0_05",
-        # "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
-        # "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
-        # "heat_equation/solutions/solution_11x11_r2_0_dt0_05",
-        # "heat_equation_manufactured/solutions/solution_11x11_r2_0_dt0_05",
-        # "heat_equation/solutions/solution_11x11_r3_0_dt0_05",
-        # "heat_equation_manufactured/solutions/solution_11x11_r3_0_dt0_05",
-        # "heat_equation/solutions/solution_11x11_r4_5_dt0_05",
-        # "heat_equation_manufactured/solutions/solution_11x11_r4_5_dt0_05",
+
+        "heat_equation/solutions/solution_11x11_r1_5_dt0_05",
+        "heat_equation_manufactured/solutions/solution_11x11_r1_5_dt0_05",
+        "heat_equation/solutions/solution_11x11_r2_0_dt0_05",
+        "heat_equation_manufactured/solutions/solution_11x11_r2_0_dt0_05",
+        "heat_equation/solutions/solution_11x11_r3_0_dt0_05",
+        "heat_equation_manufactured/solutions/solution_11x11_r3_0_dt0_05",
+        "heat_equation/solutions/solution_11x11_r4_5_dt0_05",
+        "heat_equation_manufactured/solutions/solution_11x11_r4_5_dt0_05",
     ]
 )
 
 # points at which the solution should be compared (in seconds)
 snapshots = np.array(
     [
+        0.1,
         1,
         3,
         8,

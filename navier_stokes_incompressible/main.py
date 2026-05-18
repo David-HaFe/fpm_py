@@ -84,6 +84,7 @@ def main():
             dt,
             is_border_particle,
         ),
+        border_update=lambda t: t, # dummy entry
         initial_condition=y_0,
         t_start=t0,
         t_end=t1,
