@@ -30,6 +30,7 @@ def equation(t, y, dt, is_border_particle):
             error = 1
             p_i_test = p_i
             p_i_dot_test = 0
+            p_i_dot_test_old = 100
 
             diagnostics.log_string("hai")
             while error > 1e-2:
@@ -44,9 +45,12 @@ def equation(t, y, dt, is_border_particle):
                     add_incompressibility=True,
                 )
                 diagnostics.log_full_np_array(p_i_dot_test)
-                # HACK: this should update somehow?
-                p_i_test = p_i + dt * p_i_dot_test
-                error = abs(p_i_dot_test)
+
+                # p_i_test = p_i_test + dt * (nabla_p[0] + nabla_p[1])
+                p_i_test = p_i_test + dt * p_i_dot_test
+                error = abs(p_i_dot_test - p_i_dot_test_old)
+                p_i_dot_test_old = p_i_dot_test
+                diagnostics.log_string(f"error: {error}")
 
             v_dot[i] = - nabla_p
             p_dot[i] = (p_i_test - p_i) / dt

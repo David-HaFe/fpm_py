@@ -9,7 +9,7 @@ manufactured_solution_no = "manufactured_solutions.solution_3"
 
 ### grid ######################################################################
 # number of particles in the x and y dimension
-no_particles_x = 7
+no_particles_x = 9
 no_particles_y = no_particles_x
 
 # interval where the x and y dimension are contained
@@ -109,7 +109,7 @@ no_particles = (no_particles_x + 2 * border_thickness) * (
 t0 = 0.0
 
 # end time
-t1 = .5
+t1 = 3.0
 
 # number of steps
 steps_per_sec = 20
@@ -128,7 +128,7 @@ dt = (t1 - t0) / no_steps
 
 ### kernel ####################################################################
 # factor by which kernel support should exceed initial grid distance
-kernel_scaling = 3.0
+kernel_scaling = 1.5
 
 # DO NOT TOUCH
 # actual kernel support length based on kernel scaling
@@ -150,7 +150,7 @@ densities = np.full(no_particles, rho)
 nu = 1 / rho
 kinetic_viscosities = np.full(no_particles, nu)
 
-gravity = np.array([0, -9.81])
+gravity = np.array([0, -0.81])
 
 ### visualization #############################################################
 # for compare command

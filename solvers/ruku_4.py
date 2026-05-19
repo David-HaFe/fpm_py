@@ -27,16 +27,20 @@ def ruku_4(
 
     # iterate up to the last entry of times, not including it, and also start
     # walking index at 1
-    for index, time in enumerate(times[:-1], start=1):
-        k[:, 1] = dynamics(time, y)
-        k[:, 2] = dynamics(time + half_dt, y + half_dt * k[:, 1])
-        k[:, 3] = dynamics(time + half_dt, y + half_dt * k[:, 2])
-        k[:, 4] = dynamics(time + dt, y + dt * k[:, 3])
+    try:
+        for index, time in enumerate(times[:-1], start=1):
+            k[:, 1] = dynamics(time, y)
+            k[:, 2] = dynamics(time + half_dt, y + half_dt * k[:, 1])
+            k[:, 3] = dynamics(time + half_dt, y + half_dt * k[:, 2])
+            k[:, 4] = dynamics(time + dt, y + dt * k[:, 3])
 
-        # final answer
-        y += (dt / 6) * (k[:, 1] + 2 * k[:, 2] + 2 * k[:, 3] + k[:, 4])
-        y = solution[:, index] = y
+            # final answer
+            y += (dt / 6) * (k[:, 1] + 2 * k[:, 2] + 2 * k[:, 3] + k[:, 4])
+            y = solution[:, index] = y
 
-        border_update(time + dt, y)
+            border_update(time + dt, y)
+    except np.linalg.LinAlgError:
+        print("\nLINALG ERROR - exiting now")
+        pass
 
     return SimpleNamespace(t=times, y=solution)

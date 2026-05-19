@@ -21,16 +21,20 @@ def chorin(
     y = initial_condition
     solution[:, 0] = initial_condition
 
-    for index, time in enumerate(times[:-1], start=1):
-        # intermediate step
-        y = y + dt * forward_equation(time, y)
+    try:
+        for index, time in enumerate(times[:-1], start=1):
+            # intermediate step
+            y = y + dt * forward_equation(time, y)
 
-        # apply this until the rate of change is sufficiently small
-        # initialize error to something meaningless since python doesn't have a
-        # do while loop apparently
-        # poisson pressure equation
-        y = y + dt * projection_equation(time, y)
+            # apply this until the rate of change is sufficiently small
+            # initialize error to something meaningless since python doesn't have a
+            # do while loop apparently
+            # poisson pressure equation
+            y = y + dt * projection_equation(time, y)
 
-        solution[:, index] = y
+            solution[:, index] = y
+    except np.linalg.LinAlgError:
+        print("\nLINALG ERROR - exiting now")
+        pass
 
     return SimpleNamespace(t=times, y=solution)
